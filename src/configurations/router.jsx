@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -8,6 +7,7 @@ import {
 import Login from "../components/FormLogin";
 import Register from "../components/FormRegister";
 import ArticlePage from "../pages/ArticlePage";
+import ArticleDetail from "../pages/ArticleDetail";
 
 const RouterComponent = () => {
   return (
@@ -17,6 +17,7 @@ const RouterComponent = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/article" element={<ArticlePage />} />
+        <Route path="/article/:id" element={<ArticleDetail />} />
       </Routes>
     </Router>
   );
