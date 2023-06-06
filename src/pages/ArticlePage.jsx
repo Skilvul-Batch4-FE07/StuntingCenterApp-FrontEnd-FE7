@@ -1,12 +1,13 @@
 import { useContext } from "react";
 import { ArticleContext } from "../contexts/ArticleContext";
 import { Link } from "react-router-dom";
+import { Loader } from "../components/Loader";
 
 const ArticlePage = () => {
   const { articles, isLoading } = useContext(ArticleContext);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (
@@ -25,7 +26,7 @@ const ArticlePage = () => {
                       <Link to={`/article/${article.id}`}>
                         <img
                           src={article.image}
-                          alt="article pilihan"
+                          alt={`article pilihan ${article.id}`}
                           className="rounded-lg"
                         />
                         <h2 className="absolute bottom-0 rounded-b-lg bg-gradient-to-t from-black bg-opacity-40 left-0 w-full px-4 py-4 text-white text-lg font-semibold sm:text-2xl">
@@ -47,7 +48,7 @@ const ArticlePage = () => {
                       <div className="max-w-xl flex gap-3">
                         <img
                           src={article.image}
-                          alt="article pilihan"
+                          alt={`article pilihan ${article.id}`}
                           className="max-w-lg w-36 rounded-lg"
                         />
                         <div>
@@ -77,7 +78,11 @@ const ArticlePage = () => {
                 className="max-w-md border-slate-300 border-2 rounded-lg gap-3 shadow-lg"
               >
                 <Link to={`/article/${article.id}`}>
-                  <img src={article.image} alt="article pilihan" className="rounded-t-md"/>
+                  <img
+                    src={article.image}
+                    alt={`article terbaru ${article.id}`}
+                    className="rounded-t-md"
+                  />
                   <div className="m-2">
                     <h2 className="text-lg font-medium">{article.title}</h2>
                     <span className="text-md text-slate-500">

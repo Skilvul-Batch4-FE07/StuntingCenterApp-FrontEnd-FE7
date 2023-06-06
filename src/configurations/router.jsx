@@ -8,6 +8,7 @@ import Login from "../components/FormLogin";
 import Register from "../components/FormRegister";
 import ArticlePage from "../pages/ArticlePage";
 import ArticleDetail from "../pages/ArticleDetail";
+import ForumDiskusiPage from "../pages/ForumDiskusiPage";
 
 const RouterComponent = () => {
   return (
@@ -18,6 +19,7 @@ const RouterComponent = () => {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/article" element={<ArticlePage />} />
         <Route path="/article/:id" element={<ArticleDetail />} />
+        <Route path="/forum" element={<ForumDiskusiPage />} />
       </Routes>
     </Router>
   );
