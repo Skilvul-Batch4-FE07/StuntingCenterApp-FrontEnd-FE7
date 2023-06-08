@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
 import { fetchForum } from "../utils/api";
 import { useQuery } from "react-query";
 
@@ -7,15 +7,28 @@ export const ForumContext = createContext();
 // eslint-disable-next-line react/prop-types
 export const ForumProvider = ({ children }) => {
   const { data: forums, isLoading } = useQuery("forums", fetchForum);
-  // const addCommentMutation = useMutation(postComment);
+  const [commentData, setCommentData] = useState({});
 
-  // const addComment = (comment, forumId) => {
-  //   addCommentMutation.mutate({ comment, forumId });
-  // };
-
-  const value = { forums, isLoading };
+  const handleCommentClick = (forumId) => {
+    setCommentData((prevData) => {
+      const updatedData = { ...prevData };
+      updatedData[forumId] = forums
+        .find((forum) => forum.id === forumId)
+        ?.replies?.slice();
+      return updatedData;
+    });
+  };
 
   return (
-    <ForumContext.Provider value={value}>{children}</ForumContext.Provider>
+    <ForumContext.Provider
+      value={{
+        forums,
+        isLoading,
+        commentData,
+        handleCommentClick,
+      }}
+    >
+      {children}
+    </ForumContext.Provider>
   );
 };

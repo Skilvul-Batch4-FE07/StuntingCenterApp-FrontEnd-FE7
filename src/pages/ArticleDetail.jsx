@@ -55,7 +55,7 @@ function ArticleDetail() {
                   alt="Article pilihan 1"
                   className="w-full"
                 />
-                <p>{article.content}</p>
+                <p className="whitespace-pre-line">{article.content}</p>
               </div>
             </div>
           ) : (
