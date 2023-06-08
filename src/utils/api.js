@@ -5,10 +5,10 @@ const apiUrl = 'https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/us
 export const saveUserToApi = async (user) => {
   try {
     const response = await axios.post(apiUrl, user);
-    console.log('User saved successfully:', response.data);
+    console.log('User berhasil disimpan:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error saving user:', error);
+    console.error('Gagal menyimpan user:', error);
     throw error;
   }
 };
@@ -22,19 +22,29 @@ export const getUserFromApi = async (email, password) => {
     );
     return foundUser || null;
   } catch (error) {
-    console.error('Error getting user:', error);
+    console.error('Gagal mendapatkan user:', error);
     throw error;
   }
 };
 
-export const removeUserFromApi = async (userId) => {
+export const removeUserFromApi = async () => {
   try {
-    const url = `${apiUrl}/${userId}`;
-    const response = await axios.delete(url);
-    console.log('User removed successfully');
+    const response = await axios.delete(apiUrl);
+    console.log('User berhasil hihapus');
     return response.data;
   } catch (error) {
-    console.error('Error removing user:', error);
+    console.error('Gagal menghapus user:', error);
+    throw error;
+  }
+};
+
+export const updateUserInApi = async (userId, updatedUser) => {
+  try {
+    const response = await axios.put(`${apiUrl}/${userId}`, updatedUser);
+    console.log('User berhasil diupdate:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Gagal mengupdate user:', error);
     throw error;
   }
 };

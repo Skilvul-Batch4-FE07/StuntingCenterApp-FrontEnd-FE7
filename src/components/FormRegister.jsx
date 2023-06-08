@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { register } from '../features/authSlice';
 import { saveUserToApi, getUserFromApi } from '../utils/api';
-import { Envelope, Lock } from 'react-bootstrap-icons';
+import { Envelope, PersonCircle, LockFill } from 'react-bootstrap-icons';
 import { Eye, EyeSlash } from 'react-bootstrap-icons';
-import imgSide from '../assets/icon_bg.png';
+import imgSide from '../assets/img/icon_bg.png';
 import imgBg from '../assets/bg-logreg.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -18,45 +18,50 @@ const RegisterForm = () => {
   const navigate = useNavigate();
 
   const handleRegisterSuccess = () => {
-  navigate('/login');
-};
+    navigate('/login');
+  };
 
-const handleRegister = async (e) => {
-  e.preventDefault();
+  const handleRegister = async (e) => {
+    e.preventDefault();
 
-  const existingUser = await getUserFromApi(email, password);
-  if (existingUser) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Email Already Used',
-      text: 'The email address is already registered.',
-    });
-    return;
-  }
+    const existingUser = await getUserFromApi(email, password);
+    if (existingUser) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Email sudah digunakan',
+        text: 'Alamat email sudah digunakan',
+      });
+      return;
+    }
 
-  const user = { name, email, password };
-  try {
-    await saveUserToApi(user);
-    dispatch(register(user));
-    setName('');
-    setEmail('');
-    setPassword('');
-    Swal.fire({
-      icon: 'success',
-      title: 'Registration Successful',
-      text: 'You have successfully registered.',
-    }).then(() => {
-      handleRegisterSuccess();
-    });
-  } catch (error) {
-    console.error('Error registering user:', error);
-    alert('Registration failed');
-  }
-};
+    const user = { name, email, password };
+    try {
+      await saveUserToApi(user);
+      dispatch(register(user));
+      setName('');
+      setEmail('');
+      setPassword('');
+      Swal.fire({
+        icon: 'success',
+        title: 'Registration Successful',
+        text: 'Alamat email sudah terdaftar.',
+      }).then(() => {
+        handleRegisterSuccess();
+      });
+    } catch (error) {
+      console.error('Kesalahan saat mendaftarkan pengguna:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed',
+        text: 'Gagal mendaftar. Coba lagi nanti.',
+      });
+    }
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   return (
     <div className='pl- flex flex-col-reverse md:flex-row items-center justify-around min-h-screen font-sans'>
       <div className='w-full max-w-md flex overflow-hidden'>
@@ -64,17 +69,17 @@ const handleRegister = async (e) => {
           <div className='flex pb-8'>
             <NavLink
               to='/login'
-              className='text-3xl font-bold text-gray-800 flex-1 pl-10'
+              className='text-3xl font-bold flex-1 pl-10 opacity-50'
               style={{ color: 'rgba(17, 118, 143, 255)' }}
             >
-              Login
+              Masuk
             </NavLink>
             <NavLink
               to='/register'
-              className='text-3xl font-bold text-gray-800 flex-1'
+              className='text-3xl font-bold flex-1 underline'
               style={{ color: 'rgba(17, 118, 143, 255)' }}
             >
-              Register
+              Daftar
             </NavLink>
           </div>
           <form onSubmit={handleRegister} className='px-0'>
@@ -86,7 +91,7 @@ const handleRegister = async (e) => {
                 }}
               >
                 <div className='mr-3 text-gray-400'>
-                  <Envelope />
+                  <PersonCircle color="rgba(73,193,166,1)" />
                 </div>
                 <input
                   type='text'
@@ -94,7 +99,7 @@ const handleRegister = async (e) => {
                   className='w-full bg-transparent focus:outline-none'
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder='Enter your name'
+                  placeholder='Masukkan nama kamu'
                   required
                 />
               </div>
@@ -107,7 +112,7 @@ const handleRegister = async (e) => {
                 }}
               >
                 <div className='mr-3 text-gray-400'>
-                  <Envelope />
+                  <Envelope color="rgba(73,193,166,1)"/>
                 </div>
                 <input
                   type='email'
@@ -115,7 +120,7 @@ const handleRegister = async (e) => {
                   className='w-full bg-transparent focus:outline-none'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder='Enter your email'
+                  placeholder='Masukkan alamat email kamu'
                   required
                 />
               </div>
@@ -128,7 +133,7 @@ const handleRegister = async (e) => {
                 }}
               >
                 <div className='mr-3 text-gray-400'>
-                  <Lock />
+                <LockFill color="rgba(73,193,166,1)" />
                 </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -136,32 +141,42 @@ const handleRegister = async (e) => {
                   className='w-full bg-transparent focus:outline-none'
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder='Enter your password'
+                  placeholder='Masukkan password'
                   required
                 />
-                <div className='ml-2'>
+                <div className='ml-2' style={{ padding: '4px' }}>
                   {showPassword ? (
                     <EyeSlash
                       onClick={togglePasswordVisibility}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: 'pointer', color: 'rgba(73, 193, 166, 1)' }}
                     />
                   ) : (
                     <Eye
                       onClick={togglePasswordVisibility}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: 'pointer', color: 'rgba(73, 193, 166, 1)' }}
                     />
                   )}
                 </div>
+
               </div>
             </div>
-            
             <button
               type='submit'
-              className='w-full text-white font-bold py-1 px-3 rounded-full flex-1'
+              className='w-full text-white font-bold py-1 px-3 rounded-full flex-1 mb-2'
               style={{ backgroundColor: 'rgba(73,193,166,1)' }}
             >
-              Register
+              Daftar
             </button>
+            <p className="text-center text-gray-800 mb-4">
+              Sudah punya akun?{" "}
+              <NavLink
+                to="/login"
+                className="text-1xl font-bold text-gray-800"
+                style={{ color: '#377389' }}
+              >
+                Masuk
+              </NavLink>
+            </p>
           </form>
         </div>
       </div>
@@ -170,6 +185,9 @@ const handleRegister = async (e) => {
         style={{ overflow: 'hidden' }}
       >
         <div className='w-full mx-auto'>
+          <h1 className="text-3xl font-bold mb-8"
+            style={{ color: 'rgba(17, 118, 143, 255)' }}
+          >Bergabunglah dengan Stunting Center dan temukan solusi bersama</h1>
           <img src={imgSide} alt='Side Image' className='w-full' />
         </div>
       </div>

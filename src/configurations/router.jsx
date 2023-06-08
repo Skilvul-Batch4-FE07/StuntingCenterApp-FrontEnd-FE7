@@ -6,9 +6,9 @@ import {
   Navigate
 } from 'react-router-dom'
 import Login from '../pages/LoginPage'
-
 import Register from '../pages/RegisterPage'
-import Homepage from '../pages/HomePage'
+import HomePages from '../pages/HomePage'
+import ProfilePage from '../pages/ProfilePage'
 
 const RouterComponent = () => {
   return (
@@ -16,7 +16,8 @@ const RouterComponent = () => {
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
-        <Route path='/homepage' element={<Homepage/>} />
+        <Route path='/home' element={<HomePages />} />
+        <Route path='/profile' element={<ProfilePage />} />
         <Route path='/' element={<Navigate to='/login' />} />
       </Routes>
     </Router>

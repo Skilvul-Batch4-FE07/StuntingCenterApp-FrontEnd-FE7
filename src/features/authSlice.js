@@ -1,19 +1,65 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { saveUserToApi, removeUserFromApi, getUserFromApi } from '../utils/api';
+// authSlice.js
 
-export const loadUser = createAsyncThunk('auth/loadUser', async () => {
-  try {
-    const response = await getUserFromApi();
-    if (response && response.data) {
-      return response.data;
-    } else {
-      throw new Error('Invalid response');
+import { createSlice } from '@reduxjs/toolkit';
+import {
+  saveUserToApi,
+  getUserFromApi,
+  removeUserFromApi,
+  updateUserInApi,
+} from '../utils/api';
+import {
+  setCurrentUserId,
+  getCurrentUserId,
+  clearCurrentUserId,
+} from '../utils/localStorage';
+
+export const loadUser = () => {
+  return async (dispatch) => {
+    try {
+      const currentUserId = getCurrentUserId();
+      if (currentUserId) {
+        const response = await getUserFromApi(currentUserId);
+        if (response && response.data) {
+          dispatch(authSlice.actions.setUser(response.data));
+        } else {
+          throw new Error('Invalid response');
+        }
+      }
+    } catch (error) {
+      console.error('Error loading user:', error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Error loading user:', error);
-    throw error;
-  }
-});
+  };
+};
+
+export const logoutUser = () => {
+  return async (dispatch) => {
+    try {
+      const currentUserId = getCurrentUserId();
+      if (currentUserId) {
+        await removeUserFromApi(); // Remove the argument from removeUserFromApi()
+        clearCurrentUserId();
+        dispatch(logout()); // Dispatch the logout action directly
+      }
+    } catch (error) {
+      console.error('Error removing user:', error);
+      throw error;
+    }
+  };
+};
+
+
+export const updateUserProfile = (userId, updatedUser) => {
+  return async (dispatch) => {
+    try {
+      await updateUserInApi(userId, updatedUser);
+      dispatch(authSlice.actions.updateUserProfile(updatedUser));
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+      throw error;
+    }
+  };
+};
 
 const initialState = {
   user: null,
@@ -25,31 +71,35 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    login: (state, action) => {
+    setUser: (state, action) => {
       state.user = action.payload;
-      saveUserToApi(action.payload)
-        .catch((error) => console.error('Error saving user:', error));
+      state.loggedIn = true;
+      state.userProfile = action.payload;
     },
     logout: (state) => {
-      removeUserFromApi()
-        .catch((error) => console.error('Error removing user:', error));
       state.user = null;
       state.loggedIn = false;
       state.userProfile = null;
+    },
+    login: (state, action) => {
+      state.user = action.payload;
+      state.loggedIn = true;
+      state.userProfile = action.payload;
+      saveUserToApi(action.payload)
+        .catch((error) => console.error('Error saving user:', error));
+      setCurrentUserId(action.payload.id);
     },
     register: (state, action) => {
       state.user = action.payload;
       saveUserToApi(action.payload)
         .catch((error) => console.error('Error saving user:', error));
+      setCurrentUserId(action.payload.id);
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(loadUser.fulfilled, (state, action) => {
-      state.loggedIn = true;
+    updateUserProfile: (state, action) => {
       state.userProfile = action.payload;
-    });
+    },
   },
 });
 
-export const { login, logout, register } = authSlice.actions;
+export const { setUser, logout, login, register } = authSlice.actions;
 export default authSlice.reducer;
