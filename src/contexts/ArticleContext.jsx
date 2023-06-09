@@ -5,7 +5,6 @@ import { useQuery } from 'react-query';
 
 export const ArticleContext = createContext();
 
-// eslint-disable-next-line react/prop-types
 export const ArticleProvider = ({ children }) => {
 const {data:articles, isLoading} = useQuery("articles", fetchArticles)
 const value = {articles, isLoading}

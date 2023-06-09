@@ -1,17 +1,37 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ForumContext } from "../contexts/ForumContext";
 import { Loader } from "../components/Loader";
 import { BiComment, BiLike } from "react-icons/bi";
+import CommentForm from "../components/CommentForm";
+// import NewDiscussionForm from "../components/NewDiscussionForm";
 
 function ForumDiskusiPage() {
-  const { forums, isLoading, handleCommentClick, commentData } =
+  const { forums, isLoading, handleCommentClick, commentData, handlePostComment, handlePostDiscussion } =
     useContext(ForumContext);
 
+  const [newComment, setNewComment] = useState("");
+  const [newDiscussion, setNewDiscussion] = useState({ title: "", postContent: "" });
+  const [postedDiscussion, setPostedDiscussion] = useState(null);
   if (isLoading) {
     return <Loader />;
   }
 
+  const handleSubmitComment = (forumId) => {
+    if (newComment.trim() === "") return;
+    handlePostComment(forumId, newComment);
+    setNewComment("");
+  };
+
+  const handleSubmitDiscussion = (e) => {
+    e.preventDefault();
+    if (newDiscussion.title.trim() === "" || newDiscussion.postContent.trim() === "") return;
+    handlePostDiscussion(newDiscussion);
+    setPostedDiscussion(newDiscussion);
+    setNewDiscussion({ title: "", postContent: "" });
+  };
+
   return (
+    
     <div className="grid grid-cols-3 pt-10 justify-center mx-4 md:mx-32">
       <div className="col-span-2">
         {forums?.map((forum) => (
@@ -61,6 +81,13 @@ function ForumDiskusiPage() {
                     </div>
                   ))}
               </div>
+              <div className="mt-4">
+                <CommentForm
+                  onSubmit={(comment) => handleSubmitComment(forum.id, comment)}
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                />
+              </div>
             </div>
           </div>
         ))}
@@ -78,6 +105,34 @@ function ForumDiskusiPage() {
         <button className="bg-teal-500 py-2 px-4 rounded-full">
           Semua Diskusi
         </button>
+        <form onSubmit={handleSubmitDiscussion}>
+          <input
+            type="text"
+            value={newDiscussion.title}
+            onChange={(e) => setNewDiscussion({ ...newDiscussion, title: e.target.value })}
+            placeholder="Judul Diskusi"
+            className="border-2 border-gray-300 rounded-md p-2 w-full"
+          />
+          <textarea
+            value={newDiscussion.postContent}
+            onChange={(e) => setNewDiscussion({ ...newDiscussion, postContent: e.target.value })}
+            placeholder="Pertanyaan atau tanggapan kamu"
+            className="border-2 border-gray-300 rounded-md p-2 w-full"
+            rows={4}
+          />
+          <button
+            type="submit"
+            className="bg-teal-500 text-white py-1 px-4 mt-2 rounded-md"
+          >
+            Post Discussion
+          </button>
+        </form>
+        {postedDiscussion && (
+          <div className="max-w-2xl border-2 border-slate-200 rounded-lg shadow-lg p-4 space-y-4">
+            <h1 className="font-semibold text-xl">{postedDiscussion.title}</h1>
+            <p className="text-lg">{postedDiscussion.postContent}</p>
+          </div>
+        )}
       </div>
     </div>
   );

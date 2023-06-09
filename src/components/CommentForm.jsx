@@ -1,25 +1,43 @@
 import { useState } from "react";
 
-// eslint-disable-next-line react/prop-types
-function CommentForm({ onSubmit }) {
-  const [comment, setComment] = useState("");
+function CommentForm({ onSubmit, value, onChange }) {
+  const [submittedComment, setSubmittedComment] = useState("");
+  const [comments, setComments] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (comment.trim() === "") return;
-    onSubmit(comment);
-    setComment("");
+    if (value.trim() === "") return;
+    const newComment = {
+      id: Date.now(),
+      text: value,
+    };
+    setComments([...comments, newComment]);
+    onSubmit(value);
+    setSubmittedComment(value);
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <input
         type="text"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
+        value={value}
+        onChange={onChange}
         placeholder="Write a comment..."
       />
       <button type="submit">Submit</button>
+      {submittedComment && (
+        <p>{submittedComment}</p>
+      )}
+      {comments.length > 0 && (
+        <div>
+          <h2>Komentar sebelumnya:</h2>
+          <ul>
+            {comments.map((comment) => (
+              <li key={comment.id}>{comment.text}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </form>
   );
 }
