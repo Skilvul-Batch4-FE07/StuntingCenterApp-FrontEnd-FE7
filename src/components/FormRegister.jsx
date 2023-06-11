@@ -91,7 +91,7 @@ const RegisterForm = () => {
                 }}
               >
                 <div className='mr-3 text-gray-400'>
-                  <PersonCircle color="rgba(73,193,166,1)" />
+                  <PersonCircle color="rgba(17, 118, 143, 255)" />
                 </div>
                 <input
                   type='text'
@@ -112,7 +112,7 @@ const RegisterForm = () => {
                 }}
               >
                 <div className='mr-3 text-gray-400'>
-                  <Envelope color="rgba(73,193,166,1)"/>
+                  <Envelope color="rgba(17, 118, 143, 255)"/>
                 </div>
                 <input
                   type='email'
@@ -133,7 +133,7 @@ const RegisterForm = () => {
                 }}
               >
                 <div className='mr-3 text-gray-400'>
-                <LockFill color="rgba(73,193,166,1)" />
+                <LockFill color="rgba(17, 118, 143, 255)" />
                 </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -148,12 +148,12 @@ const RegisterForm = () => {
                   {showPassword ? (
                     <EyeSlash
                       onClick={togglePasswordVisibility}
-                      style={{ cursor: 'pointer', color: 'rgba(73, 193, 166, 1)' }}
+                      style={{ cursor: 'pointer', color: 'rgba(17, 118, 143, 255)' }}
                     />
                   ) : (
                     <Eye
                       onClick={togglePasswordVisibility}
-                      style={{ cursor: 'pointer', color: 'rgba(73, 193, 166, 1)' }}
+                      style={{ cursor: 'pointer', color: 'rgba(17, 118, 143, 255)' }}
                     />
                   )}
                 </div>
@@ -163,7 +163,7 @@ const RegisterForm = () => {
             <button
               type='submit'
               className='w-full text-white font-bold py-1 px-3 rounded-full flex-1 mb-2'
-              style={{ backgroundColor: 'rgba(73,193,166,1)' }}
+              style={{ backgroundColor: 'rgba(17, 118, 143, 255)' }}
             >
               Daftar
             </button>
@@ -185,7 +185,7 @@ const RegisterForm = () => {
         style={{ overflow: 'hidden' }}
       >
         <div className='w-full mx-auto'>
-          <h1 className="text-3xl font-bold mb-8"
+          <h1 className="p-2 text-3xl font-bold mb-8"
             style={{ color: 'rgba(17, 118, 143, 255)' }}
           >Bergabunglah dengan Stunting Center dan temukan solusi bersama</h1>
           <img src={imgSide} alt='Side Image' className='w-full' />

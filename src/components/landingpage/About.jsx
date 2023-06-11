@@ -6,19 +6,19 @@ const About = () => {
       <section className="bg-white py-5" id="about">
         <div className="container py-lg-5">
           <div className="flex flex-col md:flex-row justify-center items-center mb-5">
-            <div className="md:w-1/2 mb-4 ml-5 md:mb-0">
+            <div className="md:w-1/2 mb-4 md:mb-0">
               <img
                 src="https://i.postimg.cc/66HgKtmK/tentang-kami.jpg"
-                className="w-3/4 rounded-lg "
+                className="w-3/4 md:w-full rounded-lg pl-10"
                 alt="imgabout"
               />
             </div>
-            <div className="md:w-1/2 mr-5">
+            <div className="md:w-1/2 p-4">
               <div data-aos="fade-up">
                 <h3 className="font-bold mb-3 text-lg sm:text-xl">
                   Tentang Kami
                 </h3>
-                <h4 className="font-bold mb-3 text-2xl sm:text-4xl" style={{color : '#15acb1'}}>
+                <h4 className="font-bold mb-3 text-2xl sm:text-4xl" style={{ color: '#15acb1' }}>
                   Platform aplikasi untuk memberi kemudahan akses informasi stunting
                 </h4>
 
