@@ -5,6 +5,7 @@ import { Loader } from "../components/Loader";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Navbar from "../components/Navbar";
 
 const ArticlePage = () => {
   const { articles, isLoading } = useContext(ArticleContext);
@@ -16,6 +17,8 @@ const ArticlePage = () => {
   }
 
   return (
+    <>
+      <Navbar/>
     <div className="justify-center p-8 sm:px-24">
       <div>
         <h1 className="text-3xl font-bold mb-8">Artikel Pilihan</h1>
@@ -100,7 +103,8 @@ const ArticlePage = () => {
             ))}
         </div>
       </div>
-    </div>
+      </div>
+      </>
   );
 };
 
