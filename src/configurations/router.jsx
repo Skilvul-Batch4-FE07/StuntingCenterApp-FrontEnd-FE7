@@ -9,6 +9,7 @@ import Register from "../components/FormRegister";
 import ArticlePage from "../pages/ArticlePage";
 import ArticleDetail from "../pages/ArticleDetail";
 import ForumDiskusiPage from "../pages/ForumDiskusiPage";
+import DetailDiskusi from "../pages/DetailDiskusi";
 
 const RouterComponent = () => {
   return (
@@ -20,6 +21,7 @@ const RouterComponent = () => {
         <Route path="/article" element={<ArticlePage />} />
         <Route path="/article/:id" element={<ArticleDetail />} />
         <Route path="/forum" element={<ForumDiskusiPage />} />
+        <Route path="/forum/:id" element={<DetailDiskusi />} />
       </Routes>
     </Router>
   );

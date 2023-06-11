@@ -1,43 +1,35 @@
 import { useState } from "react";
+import { IoSendSharp } from "react-icons/io5";
 
+// eslint-disable-next-line react/prop-types
 function CommentForm({ onSubmit, value, onChange }) {
-  const [submittedComment, setSubmittedComment] = useState("");
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState("");
 
+
+  
   const handleSubmit = (e) => {
     e.preventDefault();
+    // eslint-disable-next-line react/prop-types
     if (value.trim() === "") return;
     const newComment = {
-      id: Date.now(),
-      text: value,
+      contentReply : comments.contentReply
     };
     setComments([...comments, newComment]);
     onSubmit(value);
-    setSubmittedComment(value);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="gap-4 flex items-center justify-between">
       <input
         type="text"
         value={value}
         onChange={onChange}
         placeholder="Write a comment..."
+        className="bg-slate-300 py-2 px-4 rounded-full text-lg w-full"
       />
-      <button type="submit">Submit</button>
-      {submittedComment && (
-        <p>{submittedComment}</p>
-      )}
-      {comments.length > 0 && (
-        <div>
-          <h2>Komentar sebelumnya:</h2>
-          <ul>
-            {comments.map((comment) => (
-              <li key={comment.id}>{comment.text}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <button type="submit">
+      <IoSendSharp className="w-10 h-10 bg-teal-500 text-white p-2 rounded-full hover:bg-teal-400" />
+      </button>
     </form>
   );
 }

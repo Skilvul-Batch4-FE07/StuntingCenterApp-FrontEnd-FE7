@@ -2,9 +2,14 @@ import { useContext } from "react";
 import { ArticleContext } from "../contexts/ArticleContext";
 import { Link } from "react-router-dom";
 import { Loader } from "../components/Loader";
+import dayjs from "dayjs";
+import "dayjs/locale/id";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 const ArticlePage = () => {
   const { articles, isLoading } = useContext(ArticleContext);
+  dayjs.extend(relativeTime);
+  dayjs.locale("id");
 
   if (isLoading) {
     return <Loader />;
@@ -56,7 +61,7 @@ const ArticlePage = () => {
                             {article.title}
                           </h2>
                           <span className="text-md text-slate-500">
-                            {article.createdAt.split("T")[0]}
+                            {dayjs(article.createdAt).fromNow()}
                           </span>
                         </div>
                       </div>
@@ -86,7 +91,7 @@ const ArticlePage = () => {
                   <div className="m-2">
                     <h2 className="text-lg font-medium">{article.title}</h2>
                     <span className="text-md text-slate-500">
-                      {article.createdAt.split("T")[0]}
+                      {dayjs(article.createdAt).fromNow()}
                     </span>
                     <p className="line-clamp-2">{article.description}</p>
                   </div>

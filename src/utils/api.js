@@ -3,19 +3,22 @@ export const fetchArticles = () =>
     (response) => response.json()
   );
 
-  export const fetchForum = () =>
-  fetch("https://647d55a0af98471085499e81.mockapi.io/forums").then(
-    (response) => response.json()
+export const fetchForum = () =>
+  fetch("https://647d55a0af98471085499e81.mockapi.io/forums").then((response) =>
+    response.json()
   );
-export const postComment = (forumId, comment) =>
-  fetch(`https://647d55a0af98471085499e81.mockapi.io/forums/${forumId}/replies`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ comment }),
-  }).then((response) => response.json());
-  
+export const postComment = (forumId) =>
+  fetch(
+    `https://647d55a0af98471085499e81.mockapi.io/forums/${forumId}/replies`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(),
+    }
+  ).then((response) => response.json());
+
 export const postDiscussion = (discussion) =>
   fetch("https://647d55a0af98471085499e81.mockapi.io/forums", {
     method: "POST",

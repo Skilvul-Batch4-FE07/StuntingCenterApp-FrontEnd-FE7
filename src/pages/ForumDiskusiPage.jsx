@@ -2,39 +2,48 @@ import { useContext, useState } from "react";
 import { ForumContext } from "../contexts/ForumContext";
 import { Loader } from "../components/Loader";
 import { BiComment, BiLike } from "react-icons/bi";
-import CommentForm from "../components/CommentForm";
-// import NewDiscussionForm from "../components/NewDiscussionForm";
+import { Link } from "react-router-dom";
+import dayjs from "dayjs";
+import 'dayjs/locale/id';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 function ForumDiskusiPage() {
-  const { forums, isLoading, handleCommentClick, commentData, handlePostComment, handlePostDiscussion } =
+  const { forums, isLoading, commentData, handlePostDiscussion } =
     useContext(ForumContext);
 
-  const [newComment, setNewComment] = useState("");
-  const [newDiscussion, setNewDiscussion] = useState({ title: "", postContent: "" });
-  const [postedDiscussion, setPostedDiscussion] = useState(null);
+  const [newDiscussion, setNewDiscussion] = useState({
+    title: "",
+    postContent: "",
+    createdAt: Date.now()
+  });
+
+  dayjs.extend(relativeTime);
+  dayjs.locale("id");
+
+  const handleSubmitDiscussion = (e) => {
+    e.preventDefault();
+    if (
+      newDiscussion.title.trim() === "" ||
+      newDiscussion.postContent.trim() === ""
+    )
+      return;
+    const discussion = {
+      title: newDiscussion.title,
+      postContent: newDiscussion.postContent,
+      createdAt: Date.now()
+    };
+    handlePostDiscussion(discussion);
+    setNewDiscussion({ title: "", postContent: "" });
+  };
+
   if (isLoading) {
     return <Loader />;
   }
 
-  const handleSubmitComment = (forumId) => {
-    if (newComment.trim() === "") return;
-    handlePostComment(forumId, newComment);
-    setNewComment("");
-  };
-
-  const handleSubmitDiscussion = (e) => {
-    e.preventDefault();
-    if (newDiscussion.title.trim() === "" || newDiscussion.postContent.trim() === "") return;
-    handlePostDiscussion(newDiscussion);
-    setPostedDiscussion(newDiscussion);
-    setNewDiscussion({ title: "", postContent: "" });
-  };
-
   return (
-    
     <div className="grid grid-cols-3 pt-10 justify-center mx-4 md:mx-32">
       <div className="col-span-2">
-        {forums?.map((forum) => (
+        {forums.map((forum) => (
           <div key={forum.id} className="mb-8">
             <div className="max-w-2xl border-2 border-slate-200 rounded-lg shadow-lg p-4 space-y-4">
               <div className="flex gap-4 items-center">
@@ -46,7 +55,7 @@ function ForumDiskusiPage() {
                 <div>
                   <p className="font-semibold text-lg">{forum.name}</p>
                   <span className="text-sm text-slate-600">
-                    {forum.createdAt}
+                    {dayjs(forum.createdAt).fromNow()}
                   </span>
                 </div>
               </div>
@@ -58,35 +67,29 @@ function ForumDiskusiPage() {
                 <button className="bg-gray-300 py-1 px-4 rounded-full flex items-center gap-1">
                   <BiLike /> like
                 </button>
-                <button
+                <Link
+                  to={`/forum/${forum.id}`}
                   className="bg-gray-300 py-1 px-4 rounded-full flex items-center gap-1"
-                  onClick={() => handleCommentClick(forum.id)}
                 >
-                  <BiComment /> {forum.replies.length}
-                </button>
-              </div>
-              <div className="ml-6 border-gray-300 space-y-4">
-                {commentData[forum.id] &&
-                  commentData[forum.id].map((reply) => (
-                    <div key={reply.id} className="flex items-center gap-4">
-                      <img
-                        src={reply.userProfile}
-                        alt={`user profile ${reply.id}`}
-                        className="rounded-full w-8"
-                      />
-                      <div className="bg-gray-300 rounded-md py-2 pl-2 pr-6">
-                        <p className="font-medium text-md">{reply.name}</p>
-                        <p className="font-regular">{reply.contentReply}</p>
+                  <BiComment />{" "}
+                  {forum.replies.length > 0 ? forum.replies.length : ""}
+                </Link>
+                <div className="ml-6 border-gray-300 space-y-4">
+                  {commentData[forum.id] &&
+                    commentData[forum.id].map((reply) => (
+                      <div key={reply.id} className="flex items-center gap-4">
+                        <img
+                          src={reply.userProfile}
+                          alt={`user profile ${reply.id}`}
+                          className="rounded-full w-8"
+                        />
+                        <div className="bg-gray-300 rounded-md py-2 pl-2 pr-6">
+                          <p className="font-medium text-md">{reply.name}</p>
+                          <p className="font-regular">{reply.contentReply}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-              </div>
-              <div className="mt-4">
-                <CommentForm
-                  onSubmit={(comment) => handleSubmitComment(forum.id, comment)}
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                />
+                    ))}
+                </div>
               </div>
             </div>
           </div>
@@ -109,13 +112,20 @@ function ForumDiskusiPage() {
           <input
             type="text"
             value={newDiscussion.title}
-            onChange={(e) => setNewDiscussion({ ...newDiscussion, title: e.target.value })}
+            onChange={(e) =>
+              setNewDiscussion({ ...newDiscussion, title: e.target.value })
+            }
             placeholder="Judul Diskusi"
             className="border-2 border-gray-300 rounded-md p-2 w-full"
           />
           <textarea
             value={newDiscussion.postContent}
-            onChange={(e) => setNewDiscussion({ ...newDiscussion, postContent: e.target.value })}
+            onChange={(e) =>
+              setNewDiscussion({
+                ...newDiscussion,
+                postContent: e.target.value,
+              })
+            }
             placeholder="Pertanyaan atau tanggapan kamu"
             className="border-2 border-gray-300 rounded-md p-2 w-full"
             rows={4}
@@ -127,12 +137,6 @@ function ForumDiskusiPage() {
             Post Discussion
           </button>
         </form>
-        {postedDiscussion && (
-          <div className="max-w-2xl border-2 border-slate-200 rounded-lg shadow-lg p-4 space-y-4">
-            <h1 className="font-semibold text-xl">{postedDiscussion.title}</h1>
-            <p className="text-lg">{postedDiscussion.postContent}</p>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { fetchForum, postDiscussion, postComment } from "../utils/api";
 
 export const ForumContext = createContext();
 
+// eslint-disable-next-line react/prop-types
 export const ForumProvider = ({ children }) => {
   const queryClient = useQueryClient();
   const { data: forums, isLoading } = useQuery("forums", fetchForum);
@@ -20,8 +21,8 @@ export const ForumProvider = ({ children }) => {
     });
   };
 
-  const postNewComment = useMutation(({ forumId, comment }) =>
-    postComment(forumId, comment)
+  const postNewComment = useMutation(({ forumId }) =>
+    postComment(forumId)
   );
 
   const postNewDiscussion = useMutation((discussion) =>
@@ -59,6 +60,7 @@ export const ForumProvider = ({ children }) => {
         handleCommentClick,
         handlePostDiscussion,
         handlePostComment,
+        postNewComment
       }}
     >
       {children}
