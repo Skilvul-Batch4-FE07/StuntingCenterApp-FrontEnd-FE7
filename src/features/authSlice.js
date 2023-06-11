@@ -1,5 +1,3 @@
-// authSlice.js
-
 import { createSlice } from '@reduxjs/toolkit';
 import {
   saveUserToApi,
@@ -19,8 +17,8 @@ export const loadUser = () => {
       const currentUserId = getCurrentUserId();
       if (currentUserId) {
         const response = await getUserFromApi(currentUserId);
-        if (response && response.data) {
-          dispatch(authSlice.actions.setUser(response.data));
+        if (response) {
+          dispatch(setUser(response));
         } else {
           throw new Error('Invalid response');
         }
@@ -37,9 +35,9 @@ export const logoutUser = () => {
     try {
       const currentUserId = getCurrentUserId();
       if (currentUserId) {
-        await removeUserFromApi(); // Remove the argument from removeUserFromApi()
+        await removeUserFromApi(currentUserId);
         clearCurrentUserId();
-        dispatch(logout()); // Dispatch the logout action directly
+        dispatch(logout());
       }
     } catch (error) {
       console.error('Error removing user:', error);
@@ -48,7 +46,6 @@ export const logoutUser = () => {
   };
 };
 
-
 export const updateUserProfile = (userId, updatedUser) => {
   return async (dispatch) => {
     try {
@@ -56,6 +53,32 @@ export const updateUserProfile = (userId, updatedUser) => {
       dispatch(authSlice.actions.updateUserProfile(updatedUser));
     } catch (error) {
       console.error('Error updating user profile:', error);
+      throw error;
+    }
+  };
+};
+
+export const loginUser = (user) => {
+  return async (dispatch) => {
+    try {
+      const response = await saveUserToApi(user);
+      dispatch(login(response));
+      setCurrentUserId(response.id);
+    } catch (error) {
+      console.error('Error saving user:', error);
+      throw error;
+    }
+  };
+};
+
+export const registerUser = (user) => {
+  return async (dispatch) => {
+    try {
+      const response = await saveUserToApi(user);
+      dispatch(register(response));
+      setCurrentUserId(response.id);
+    } catch (error) {
+      console.error('Error saving user:', error);
       throw error;
     }
   };
@@ -85,15 +108,9 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.loggedIn = true;
       state.userProfile = action.payload;
-      saveUserToApi(action.payload)
-        .catch((error) => console.error('Error saving user:', error));
-      setCurrentUserId(action.payload.id);
     },
     register: (state, action) => {
       state.user = action.payload;
-      saveUserToApi(action.payload)
-        .catch((error) => console.error('Error saving user:', error));
-      setCurrentUserId(action.payload.id);
     },
     updateUserProfile: (state, action) => {
       state.userProfile = action.payload;

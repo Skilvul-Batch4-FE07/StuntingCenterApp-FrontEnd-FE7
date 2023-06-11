@@ -9,6 +9,7 @@ import store from './configurations/store'
 import RouterComponent from './configurations/router'
 
 ReactDOM.render(
+  
   <Provider store={store}>
     <RouterComponent />
   </Provider>,

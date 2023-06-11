@@ -11,7 +11,7 @@ const Forum = () => {
         <div className="w-full mb-4 md:w-1/2 lg:w-1/3">
             <div className="box box-lg">
               <FaQuoteRight className="quote-icon" />
-              <div className="user c flex-col">
+              <div className="user flex-col">
                 <img className="mx-auto" src="https://i.postimg.cc/j5tmx5Tx/pic1.jpg" alt="" />
                 <h3 className="text-center">Alfon Mugi</h3>
                 <div className="flex items-center justify-center stars">

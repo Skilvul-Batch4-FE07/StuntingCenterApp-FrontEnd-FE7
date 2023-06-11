@@ -10,7 +10,7 @@ const HeroBanner = () => {
     <div className="container py-4 md:pl-20">
       <div className="flex flex-col md:flex-row justify-start items-center">
         <div className="md:w-7/12 md:text-left justify-center">
-          <h1 className="font-semibold text-4xl md:text-6xl text-center md:text-left">
+          <h1 className="font-semibold text-4xl md:text-5xl text-center md:text-left mb-2">
             Stunting<br />
             <span className="text-center">Information Center</span>
           </h1>

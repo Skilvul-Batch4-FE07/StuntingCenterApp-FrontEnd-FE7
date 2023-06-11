@@ -9,6 +9,7 @@ import Login from '../pages/LoginPage'
 import Register from '../pages/RegisterPage'
 import HomePages from '../pages/HomePage'
 import ProfilePage from '../pages/ProfilePage'
+import ForumPage from '../pages/ForumPage'
 
 const RouterComponent = () => {
   return (
@@ -19,6 +20,8 @@ const RouterComponent = () => {
         <Route path='/home' element={<HomePages />} />
         <Route path='/profile' element={<ProfilePage />} />
         <Route path='/' element={<Navigate to='/login' />} />
+        <Route path='/forum' element= {<ForumPage/>} />
+
       </Routes>
     </Router>
   )

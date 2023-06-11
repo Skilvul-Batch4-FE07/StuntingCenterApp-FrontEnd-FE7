@@ -9,7 +9,7 @@ const About = () => {
             <div className="md:w-1/2 mb-4 md:mb-0">
               <img
                 src="https://i.postimg.cc/66HgKtmK/tentang-kami.jpg"
-                className="w-3/4 md:w-full rounded-lg pl-10"
+                className="w-3/4 md:w-100 rounded-lg pl-10"
                 alt="imgabout"
               />
             </div>

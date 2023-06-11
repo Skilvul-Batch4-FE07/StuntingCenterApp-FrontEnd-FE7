@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
-import { logout } from '../features/authSlice';
+import { logout, loadUser } from '../features/authSlice'; // Menambahkan loadUser dari authSlice
 import '../components/style/landingpage.css';
 import { MenuIcon, XIcon } from '@heroicons/react/solid';
 
@@ -14,6 +14,10 @@ const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [userName, setUserName] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(loadUser()); // Memuat pengguna saat komponen Navbar dimuat
+  }, [dispatch]);
 
   useEffect(() => {
     if (user) {
@@ -33,6 +37,7 @@ const Navbar = () => {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
 
   return (
     <header className="border-b border-gray-300 sticky top-0 z-50 bg-white py-2">
@@ -64,13 +69,13 @@ const Navbar = () => {
               <NavLink to="/home">Home</NavLink>
             </li>
             <li className="lg:px-4 py-2 hover:text-cyan-600 font-semibold text-lg lg:pl-6">
-              <NavLink to="/home">BMI</NavLink>
+              <NavLink to="/bmi">BMI</NavLink>
             </li>
             <li className="lg:px-4 py-2 hover:text-cyan-600 font-semibold text-lg lg:pl-6">
-              <NavLink to="/home">Artikel</NavLink>
+              <NavLink to="/article">Artikel</NavLink>
             </li>
             <li className="lg:px-4 py-2 hover:text-cyan-600 font-semibold text-lg lg:pl-6">
-              <NavLink to="/home">Forum</NavLink>
+              <NavLink to="/forum">Forum</NavLink>
             </li>
 
 

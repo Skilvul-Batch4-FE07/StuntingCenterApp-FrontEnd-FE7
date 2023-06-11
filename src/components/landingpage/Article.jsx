@@ -64,7 +64,7 @@ const Article = () => {
 
   return (
     <>
-      <h4 className="font-bold mb-5 text-4xl text-center" style={{ fontSize: '40px', color: '#019398' }}>
+      <h4 className="font-bold mb-5 text-4xl text-center" style={{ fontSize: '36px', color: 'black' }}>
         Artikel
       </h4>
       <div className="carousel my-16 mx-20">

@@ -1,13 +1,13 @@
-const setCurrentUserId = (userId) => {
-  localStorage.setItem('currentUserId', userId);
+const CURRENT_USER_ID_KEY = 'currentUserId';
+
+export const setCurrentUserId = (userId) => {
+  localStorage.setItem(CURRENT_USER_ID_KEY, userId);
 };
 
-const getCurrentUserId = () => {
-  return localStorage.getItem('currentUserId');
+export const getCurrentUserId = () => {
+  return localStorage.getItem(CURRENT_USER_ID_KEY);
 };
 
-const clearCurrentUserId = () => {
-  localStorage.removeItem('currentUserId');
+export const clearCurrentUserId = () => {
+  localStorage.removeItem(CURRENT_USER_ID_KEY);
 };
-
-export { setCurrentUserId, getCurrentUserId, clearCurrentUserId };
