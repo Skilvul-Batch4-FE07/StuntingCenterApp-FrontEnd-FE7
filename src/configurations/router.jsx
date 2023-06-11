@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   BrowserRouter as Router,
   Route,
@@ -24,7 +23,7 @@ const RouterComponent = () => {
 
       </Routes>
     </Router>
-  )
-}
+  );
+};
 
-export default RouterComponent
+export default RouterComponent;
