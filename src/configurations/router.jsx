@@ -7,6 +7,8 @@ import {
 } from 'react-router-dom'
 import Login from '../components/FormLogin'
 import Register from '../components/FormRegister'
+import BmiCalculator from '../components/bmicalculator'
+
 
 const RouterComponent = () => {
   return (
@@ -14,7 +16,7 @@ const RouterComponent = () => {
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
-        <Route path='/' element={<Navigate to='/login' />} />
+        <Route path='/bmicalculator' element={<BmiCalculator/>} />
       </Routes>
     </Router>
   )
