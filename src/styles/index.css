@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.changeArticle {
+  max-height: 24rem;
+}
+
+
