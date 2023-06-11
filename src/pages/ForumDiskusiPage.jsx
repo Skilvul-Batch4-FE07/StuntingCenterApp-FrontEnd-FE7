@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import 'dayjs/locale/id';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import Navbar from "../components/Navbar";
 
 function ForumDiskusiPage() {
   const { forums, isLoading, commentData, handlePostDiscussion } =
@@ -41,6 +42,8 @@ function ForumDiskusiPage() {
   }
 
   return (
+    <>
+      <Navbar/>
     <div className="grid grid-cols-3 pt-10 justify-center mx-4 md:mx-32">
       <div className="col-span-2">
         {forums.map((forum) => (
@@ -138,7 +141,8 @@ function ForumDiskusiPage() {
           </button>
         </form>
       </div>
-    </div>
+      </div>
+      </>
   );
 }
 

@@ -10,6 +10,7 @@ import { IoShareSocialOutline } from "react-icons/io5";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Navbar from "../components/Navbar";
 
 function DetailDiskusi() {
   const { forums, isLoading, handlePostComment } = useContext(ForumContext);
@@ -52,6 +53,8 @@ function DetailDiskusi() {
   const forum = forums.find((forum) => forum.id === id);
 
   return (
+    <>
+      <Navbar/>
     <div>
       <div className="sm:max-w-2xl w-full px-4 justify-center mx-auto mt-10">
         <div className="flex justify-between mb-4">
@@ -143,7 +146,8 @@ function DetailDiskusi() {
           <div>Discussion not found</div>
         )}
       </div>
-    </div>
+      </div>
+      </>
   );
 }
 
