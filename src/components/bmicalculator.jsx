@@ -9,27 +9,32 @@ function BmiCalculator() {
   const [tinggiError, setTinggiError] = useState("");
   const [beratError, setBeratError] = useState("");
 
+  // Fungsi untuk menghitung result bmi berdasarkan inputan
   const calculateBMI = () => {
-    const tinggiNum = parseInt(tinggiInput);
-    const beratNum = parseInt(beratInput);
+    const tinggiNum = parseInt(tinggiInput); // Mengubah nilai string menjadi integer
+    const beratNum = parseInt(beratInput);  // Mengubah nilai string menjadi integer
 
+    //check apakah inputan angka atau kurang dari nol
     if (isNaN(tinggiNum) || tinggiNum <= 0) {
       setTinggiError("Mohon isi data dengan angka");
     } else {
       setTinggiError("");
     }
 
+    //check apakah inputan angka atau kurang dari nol
     if (isNaN(beratNum) || beratNum <= 0) {
       setBeratError("Mohon isi data dengan angka");
     } else {
       setBeratError("");
     }
 
+    //perhitungan BMI dengan rumus BMI
     if (tinggiNum > 0 && beratNum > 0) {
       const bmiResult = (beratNum / (((tinggiNum / 100) * tinggiNum) / 100)).toFixed(2);
 
+      //menentukan kategori dari hasil perhitungan
       let bmiCategory = "";
-      if (bmiResult <= 18.5) {
+      if (bmiResult <= 18.4) {
         bmiCategory = "Underweight";
       } else if (bmiResult >= 18.6 && bmiResult < 24.9) {
         bmiCategory = "Normal";
@@ -38,15 +43,35 @@ function BmiCalculator() {
       } else {
         bmiCategory = "Obesity";
       }
+
+    
   
+      //menentukan gender berdasarkan inputan radio button
       let genderString = "";
       if (jenisKelamin === "Pria") {
         genderString = "Pria";
       } else {
         genderString = "Wanita";
       }
-  
-      setResult(`Nama: ${namaInput}, Umur: ${umurInput}, Jenis Kelamin: ${genderString}, BMI: ${bmiResult}, Kategori: ${bmiCategory}`);
+
+      let bmiCategoryWomen = "";
+      if (jenisKelamin === "Wanita"){
+        if (bmiResult <= 18.4) {
+          bmiCategoryWomen = "Underweight";
+        } else if (bmiResult >= 18.5 && bmiResult < 23.9) {
+          bmiCategoryWomen = "Normal";
+        } else if (bmiResult >= 24 && bmiResult < 28.9) {
+          bmiCategoryWomen = "Overweight";
+        } else {
+          bmiCategoryWomen = "Obesity";
+        }
+      }
+
+      //menyimpan seluruh hasil dengan state result
+      setResult(
+        `Nama: ${namaInput}, Umur: ${umurInput}, Jenis Kelamin: ${genderString}, BMI: ${bmiResult}, Kategori: ${
+          jenisKelamin === "Wanita" ? bmiCategoryWomen : bmiCategory}`
+      );
     } else {
       alert("Calculator Error");
       setResult("");
