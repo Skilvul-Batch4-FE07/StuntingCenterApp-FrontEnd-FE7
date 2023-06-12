@@ -1,14 +1,13 @@
-const localStorageKey = 'myAppUser';
+const CURRENT_USER_ID_KEY = 'currentUserId';
 
-export const saveUserToLocalStorage = (user) => {
-  localStorage.setItem(localStorageKey, JSON.stringify(user));
+export const setCurrentUserId = (userId) => {
+  localStorage.setItem(CURRENT_USER_ID_KEY, userId);
 };
 
-export const getUserFromLocalStorage = () => {
-  const user = localStorage.getItem(localStorageKey);
-  return user ? JSON.parse(user) : null;
+export const getCurrentUserId = () => {
+  return localStorage.getItem(CURRENT_USER_ID_KEY);
 };
 
-export const removeUserFromLocalStorage = () => {
-  localStorage.removeItem(localStorageKey);
+export const clearCurrentUserId = () => {
+  localStorage.removeItem(CURRENT_USER_ID_KEY);
 };
