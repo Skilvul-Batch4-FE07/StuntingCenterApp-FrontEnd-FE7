@@ -40,7 +40,6 @@ const Article = () => {
   };
 
 
-
   useEffect(() => {
     if (carousel !== null && carousel.current !== null) {
       carousel.current.scrollLeft = carousel.current.offsetWidth * currentIndex;
