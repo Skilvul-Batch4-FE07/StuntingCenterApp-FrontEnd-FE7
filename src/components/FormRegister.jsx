@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { register } from '../features/authSlice';
+import { registerUser } from '../features/authSlice';
 import { saveUserToApi, getUserFromApi } from '../utils/api';
 import { Envelope, PersonCircle, LockFill } from 'react-bootstrap-icons';
 import { Eye, EyeSlash } from 'react-bootstrap-icons';
@@ -24,7 +24,7 @@ const RegisterForm = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    const existingUser = await getUserFromApi(email, password);
+    const existingUser = await getUserFromApi(email);
     if (existingUser) {
       Swal.fire({
         icon: 'error',
@@ -37,7 +37,7 @@ const RegisterForm = () => {
     const user = { name, email, password };
     try {
       await saveUserToApi(user);
-      dispatch(register(user));
+      dispatch(registerUser(user));
       setName('');
       setEmail('');
       setPassword('');
@@ -91,7 +91,7 @@ const RegisterForm = () => {
                 }}
               >
                 <div className='mr-3 text-gray-400'>
-                  <PersonCircle color="rgba(17, 118, 143, 255)" />
+                  <PersonCircle color='rgba(17, 118, 143, 255)' />
                 </div>
                 <input
                   type='text'
@@ -112,7 +112,7 @@ const RegisterForm = () => {
                 }}
               >
                 <div className='mr-3 text-gray-400'>
-                  <Envelope color="rgba(17, 118, 143, 255)"/>
+                  <Envelope color='rgba(17, 118, 143, 255)' />
                 </div>
                 <input
                   type='email'
@@ -133,7 +133,7 @@ const RegisterForm = () => {
                 }}
               >
                 <div className='mr-3 text-gray-400'>
-                <LockFill color="rgba(17, 118, 143, 255)" />
+                  <LockFill color='rgba(17, 118, 143, 255)' />
                 </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -148,16 +148,21 @@ const RegisterForm = () => {
                   {showPassword ? (
                     <EyeSlash
                       onClick={togglePasswordVisibility}
-                      style={{ cursor: 'pointer', color: 'rgba(17, 118, 143, 255)' }}
+                      style={{
+                        cursor: 'pointer',
+                        color: 'rgba(17, 118, 143, 255)',
+                      }}
                     />
                   ) : (
                     <Eye
                       onClick={togglePasswordVisibility}
-                      style={{ cursor: 'pointer', color: 'rgba(17, 118, 143, 255)' }}
+                      style={{
+                        cursor: 'pointer',
+                        color: 'rgba(17, 118, 143, 255)',
+                      }}
                     />
                   )}
                 </div>
-
               </div>
             </div>
             <button
@@ -167,11 +172,11 @@ const RegisterForm = () => {
             >
               Daftar
             </button>
-            <p className="text-center text-gray-800 mb-4">
-              Sudah punya akun?{" "}
+            <p className='text-center text-gray-800 mb-4'>
+              Sudah punya akun?{' '}
               <NavLink
-                to="/login"
-                className="text-1xl font-bold text-gray-800"
+                to='/login'
+                className='text-1xl font-bold text-gray-800'
                 style={{ color: '#377389' }}
               >
                 Masuk
@@ -185,9 +190,12 @@ const RegisterForm = () => {
         style={{ overflow: 'hidden' }}
       >
         <div className='w-full mx-auto'>
-          <h1 className="p-2 text-3xl font-bold mb-8"
+          <h1
+            className='p-2 text-3xl font-bold mb-8'
             style={{ color: 'rgba(17, 118, 143, 255)' }}
-          >Bergabunglah dengan Stunting Center dan temukan solusi bersama</h1>
+          >
+            Bergabunglah dengan Stunting Center dan temukan solusi bersama
+          </h1>
           <img src={imgSide} alt='Side Image' className='w-full' />
         </div>
       </div>

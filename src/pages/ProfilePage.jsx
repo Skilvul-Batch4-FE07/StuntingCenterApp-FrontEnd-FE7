@@ -23,19 +23,19 @@ const ProfilePage = () => {
   }, [dispatch, user]);
 
   const handleUpdateProfile = async () => {
-    try {
-      await updateUserInApi(user.id, { name, email });
-      dispatch(updateUserProfile({ id: user.id, name, email }));
-      navigate('/profile');
-      Swal.fire({
-        icon: 'success',
-        title: 'Profile Updated',
-        text: 'Your profile has been successfully updated!',
-      });
-    } catch (error) {
-      console.error('Error updating profile:', error);
-    }
-  };
+  try {
+    await dispatch(updateUserProfile(user.id, { name, email }));
+    navigate('/profile');
+    Swal.fire({
+      icon: 'success',
+      title: 'Profile Updated',
+      text: 'Your profile has been successfully updated!',
+    });
+  } catch (error) {
+    console.error('Error updating profile:', error);
+  }
+};
+
 
   const handleLogout = () => {
   dispatch(logout());
@@ -44,7 +44,7 @@ const ProfilePage = () => {
 
 
   if (!user) {
-    return null; // Render loading state or redirect to login page
+    return null;
   }
 
   return (

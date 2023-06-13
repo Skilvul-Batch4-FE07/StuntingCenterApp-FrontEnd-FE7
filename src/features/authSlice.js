@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { getUsers, createUser } from '../utils/api';
 import {
   saveUserToApi,
   getUserFromApi,
@@ -6,19 +7,21 @@ import {
   updateUserInApi,
 } from '../utils/api';
 import {
-  setCurrentUserId,
-  getCurrentUserId,
-  clearCurrentUserId,
+  setCurrentUser,
+  getCurrentUser,
+  clearCurrentUser,
 } from '../utils/localStorage';
+
 
 export const loadUser = () => {
   return async (dispatch) => {
     try {
-      const currentUserId = getCurrentUserId();
+      const currentUserId = getCurrentUser();
       if (currentUserId) {
         const response = await getUserFromApi(currentUserId);
         if (response) {
           dispatch(setUser(response));
+          setCurrentUser(response.id); // Simpan ID pengguna ke dalam local storage
         } else {
           throw new Error('Invalid response');
         }
@@ -33,10 +36,10 @@ export const loadUser = () => {
 export const logoutUser = () => {
   return async (dispatch) => {
     try {
-      const currentUserId = getCurrentUserId();
+      const currentUserId = getCurrentUser();
       if (currentUserId) {
         await removeUserFromApi(currentUserId);
-        clearCurrentUserId();
+        clearCurrentUser();
         dispatch(logout());
       }
     } catch (error) {
@@ -46,6 +49,34 @@ export const logoutUser = () => {
   };
 };
 
+export const loginUser = (credentials) => async (dispatch) => {
+  try {
+    dispatch(loginRequest());
+    const users = await getUsers();
+    const user = users.find(
+      (user) => user.email === credentials.email && user.password === credentials.password
+    );
+
+    if (user) {
+      dispatch(loginSuccess(user));
+    } else {
+      throw new Error('Invalid email or password');
+    }
+  } catch (error) {
+    throw new Error('An error occurred while logging in');
+  }
+};
+
+export const registerUser = (user) => async (dispatch) => {
+  try {
+    dispatch(registerRequest());
+    await createUser(user);
+    dispatch(registerSuccess());
+  } catch (error) {
+    dispatch(registerFailure('Terjadi kesalahan saat melakukan register'));
+  }
+};
+
 export const updateUserProfile = (userId, updatedUser) => {
   return async (dispatch) => {
     try {
@@ -53,32 +84,6 @@ export const updateUserProfile = (userId, updatedUser) => {
       dispatch(authSlice.actions.updateUserProfile(updatedUser));
     } catch (error) {
       console.error('Error updating user profile:', error);
-      throw error;
-    }
-  };
-};
-
-export const loginUser = (user) => {
-  return async (dispatch) => {
-    try {
-      const response = await saveUserToApi(user);
-      dispatch(login(response));
-      setCurrentUserId(response.id);
-    } catch (error) {
-      console.error('Error saving user:', error);
-      throw error;
-    }
-  };
-};
-
-export const registerUser = (user) => {
-  return async (dispatch) => {
-    try {
-      const response = await saveUserToApi(user);
-      dispatch(register(response));
-      setCurrentUserId(response.id);
-    } catch (error) {
-      console.error('Error saving user:', error);
       throw error;
     }
   };
@@ -114,6 +119,31 @@ const authSlice = createSlice({
     },
     updateUserProfile: (state, action) => {
       state.userProfile = action.payload;
+    },
+    loginRequest: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    loginSuccess: (state, action) => {
+      state.user = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    loginFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    registerRequest: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    registerSuccess: (state) => {
+      state.loading = false;
+      state.error = null;
+    },
+    registerFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     },
   },
 });

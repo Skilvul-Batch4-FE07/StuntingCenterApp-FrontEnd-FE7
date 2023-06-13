@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
-import { logout, loadUser } from '../features/authSlice'; // Menambahkan loadUser dari authSlice
-import '../components/style/landingpage.css';
+import { logout, loadUser } from '../features/authSlice';
 import { MenuIcon, XIcon } from '@heroicons/react/solid';
-
 import NavLogo from '../assets/img/logo_new2.png';
 
 const Navbar = () => {
@@ -16,7 +14,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(loadUser()); // Memuat pengguna saat komponen Navbar dimuat
+    dispatch(loadUser());
   }, [dispatch]);
 
   useEffect(() => {
@@ -38,7 +36,6 @@ const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-
   return (
     <header className="border-b border-gray-300 sticky top-0 z-50 bg-white py-2">
       <div className="flex justify-between items-center xl:max-w-7xl xl:mx-auto max-w-full flex-wrap px-4">
@@ -56,10 +53,10 @@ const Navbar = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               {isMobileMenuOpen ? (
-              <XIcon className="h-6 w-6" />
-            ) : (
-              <MenuIcon className="h-6 w-6" /> 
-            )}
+                <XIcon className="h-6 w-6" />
+              ) : (
+                <MenuIcon className="h-6 w-6" />
+              )}
             </svg>
           </button>
         </div>
@@ -78,12 +75,13 @@ const Navbar = () => {
               <NavLink to="/forum">Forum</NavLink>
             </li>
 
-
             {user && (
               <li className="lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6">
                 <div className="flex items-center cursor-pointer hover:text-primary" onClick={toggleDropdown}>
                   <div className="rounded-full bg-gray-300 h-8 w-8 flex items-center justify-center mr-1">
-                    <span className="font-semibold" style={{ color: '#15acb1' }}>{user.name[0]}</span>
+                    <span className="font-semibold" style={{ color: '#15acb1' }}>
+                      {user.name[0]}
+                    </span>
                   </div>
                   <span style={{ color: '#15acb1' }}>{userName}</span>
                 </div>
@@ -111,15 +109,19 @@ const Navbar = () => {
             )}
             {!user && (
               <li className="lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6">
-              <NavLink
-                to="/login"
-                className="bg-primary text-white rounded py-2 px-4 font-semibold text-md ml-2 flex justify-center items-center transition duration-300 ease-in-out"
-                style={{ backgroundColor: '#15acb1' }}
-                onMouseOver={(e) => { e.target.style.backgroundColor = '#1f6d79'; }} 
-                onMouseOut={(e) => { e.target.style.backgroundColor = '#15acb1'; }} 
-              >
-                Login / Register
-              </NavLink> 
+                <NavLink
+                  to="/login"
+                  className="bg-primary text-white rounded py-2 px-4 font-semibold text-md ml-2 flex justify-center items-center transition duration-300 ease-in-out"
+                  style={{ backgroundColor: '#15acb1' }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = '#1f6d79';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = '#15acb1';
+                  }}
+                >
+                  Login / Register
+                </NavLink>
               </li>
             )}
           </ul>

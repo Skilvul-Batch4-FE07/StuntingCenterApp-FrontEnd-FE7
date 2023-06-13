@@ -10,7 +10,9 @@ export const ForumProvider = ({ children }) => {
   const queryClient = useQueryClient();
   const { data: forums, isLoading } = useQuery("forums", fetchForum);
   const [commentData, setCommentData] = useState({});
+  const [userData, setUserData] = useState(null);
 
+  
   const handleCommentClick = (forumId) => {
     setCommentData((prevData) => {
       const updatedData = { ...prevData };
@@ -40,15 +42,23 @@ export const ForumProvider = ({ children }) => {
     });
   };
 
-  const handlePostComment = (forumId, comment) => {
-    postNewComment.mutate({ forumId, comment }, {
-      onSuccess: () => {
-        queryClient.invalidateQueries("forums");
-      },
-      onError: (error) => {
-        console.error("Gagal mengirim komentar:", error);
-      },
-    });
+const handlePostComment = async (forumId, newComment) => {
+    if (newComment.trim() === '') return;
+
+    try {
+      const comment = {
+        name: 'User',
+        contentReply: newComment,
+        userProfile: 'user-profile-url', // Ganti dengan URL gambar profil pengguna
+        createdAt: new Date().toISOString(),
+      };
+
+      await postComment(forumId, comment);
+      queryClient.invalidateQueries('forums');
+      setNewComment('');
+    } catch (error) {
+      console.error('Gagal mengirim komentar:', error);
+    }
   };
 
   return (

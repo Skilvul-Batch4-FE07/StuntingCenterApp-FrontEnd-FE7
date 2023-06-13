@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import 'dayjs/locale/id';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 function ForumDiskusiPage() {
   const { forums, isLoading, commentData, handlePostDiscussion } =
@@ -31,7 +32,7 @@ function ForumDiskusiPage() {
     const discussion = {
       title: newDiscussion.title,
       postContent: newDiscussion.postContent,
-      createdAt: Date.now()
+      createdAt: Date.now(),
     };
     handlePostDiscussion(discussion);
     setNewDiscussion({ title: "", postContent: "" });
@@ -142,6 +143,7 @@ function ForumDiskusiPage() {
         </form>
       </div>
       </div>
+      <Footer/>
       </>
   );
 }

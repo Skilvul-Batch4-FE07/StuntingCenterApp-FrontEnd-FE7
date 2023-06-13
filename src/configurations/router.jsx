@@ -12,6 +12,7 @@ import ForumPage from '../pages/ForumDiskusiPage'
 import ArticlePage from '../pages/ArticlePage'
 import ArticleDetail from '../pages/ArticleDetail'
 import DetailDiskusi from '../pages/DetailDiskusi'
+import BmiPage from '../pages/ForumPage'
 
 const RouterComponent = () => {
   return (
@@ -25,6 +26,7 @@ const RouterComponent = () => {
         <Route path='/profile' element={<ProfilePage />} />
         <Route path='/' element={<Navigate to='/login' />} />
         <Route path='/forum' element= {<ForumPage/>} />
+        <Route path='/bmi' element= {<BmiPage/>} />
         <Route path="/forum/:id" element={<DetailDiskusi />} />
       </Routes>
     </Router>

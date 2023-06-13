@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect} from "react";
 import { ForumContext } from "../contexts/ForumContext";
 import { BiComment, BiLike } from "react-icons/bi";
 import CommentForm from "../components/CommentForm";
@@ -11,11 +11,16 @@ import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Navbar from "../components/Navbar";
+import { useSelector } from "react-redux";
+import Footer from "../components/Footer";
 
 function DetailDiskusi() {
   const { forums, isLoading, handlePostComment } = useContext(ForumContext);
   const [newComment, setNewComment] = useState("");
   const { id } = useParams();
+  const [isCommentUpdating, setCommentUpdating] = useState(false)
+  const userProfile = useSelector((state) => state.auth.userProfile);
+  
 
   dayjs.extend(relativeTime);
   dayjs.locale("id");
@@ -30,33 +35,48 @@ function DetailDiskusi() {
     });
   };
 
+  
+
   if (isLoading) {
     return <Loader />;
   }
 
-  const handleSubmitComment = (forumId) => {
-    if (newComment.trim() === "") return;
-    handlePostComment(forumId, newComment);
-    setNewComment("");
+  // const handleSubmitComment = (forumId) => {
+  //   if (newComment.trim() === "") return;
+  //   handlePostComment(forumId, newComment);
+  //   setNewComment("");
+  // };
+  const handleSubmitComment = async (forumId) => {
+  if (newComment.trim() === "") return;
+
+  const updatedForum = { ...forum };
+  const newReply = {
+    id: Date.now().toString(),
+    name: userProfile?.name || "",
+    contentReply: newComment,
+    userProfile: userProfile?.profileUrl || "",
+    createdAt: new Date().toISOString(),
   };
 
-  // const handleSubmitComment = (e) => {
-  //   e.preventDefault();
-  //   if (newComment.contentReply.trim() === "") return;
-  //   const comments = {
-  //     contentReply: newComment.contentReply,
-  //   };
-  //   handlePostComment(comments);
-  //   setNewComment({ contentReply: "" });
-  // };
+  updatedForum.replies.push(newReply);
 
+  const updatedForums = [...forums];
+  const forumIndex = updatedForums.findIndex((f) => f.id === forumId);
+  updatedForums[forumIndex] = updatedForum;
+
+  setCommentUpdating(true);
+  await handlePostComment(forum.id, newComment); // Tunggu hingga pembaruan komentar selesai
+  setCommentUpdating(false);
+  setNewComment("");
+};
   const forum = forums.find((forum) => forum.id === id);
+  
 
   return (
     <>
       <Navbar/>
-    <div>
-      <div className="sm:max-w-2xl w-full px-4 justify-center mx-auto mt-10">
+    <div className="">
+      <div className=" sm:max-w-2xl w-full px-4 justify-center mx-auto mt-10">
         <div className="flex justify-between mb-4">
           <button>
             <BsChevronLeft className="text-xl" onClick={goBack} />
@@ -65,7 +85,7 @@ function DetailDiskusi() {
           <button>
             <IoShareSocialOutline className="text-xl" onClick={sharePost} />
           </button>
-        </div>
+          </div>
         {forums ? (
           <div key={forum.id} className="mb-8">
             <div className="max-w-2xl border-2 border-slate-200 rounded-lg shadow-lg p-4 space-y-4">
@@ -81,7 +101,8 @@ function DetailDiskusi() {
                     {dayjs(forum.createdAt).fromNow()}
                   </span>
                 </div>
-              </div>
+                  </div>
+                  
               <div>
                 <h1 className="font-semibold text-xl">{forum.title}</h1>
                 <p className="text-lg">{forum.postContent}</p>
@@ -92,10 +113,10 @@ function DetailDiskusi() {
                 </button>
                 <button className="bg-gray-300 py-1 px-4 rounded-full flex items-center gap-1">
                   <BiComment />{" "}
-                  {forum.replies.length > 0 ? forum.replies.length : ""}
+                {forum.replies.length > 0 ? forum.replies.length : ""}
                 </button>
               </div>
-              <div className="mt-8">
+              <div className="commentDetail overflow-y-auto overflow-x-hidden mt-8">
                 {forum.replies.length > 0 ? (
                   <ul className="space-y-4">
                     <h2 className="font-medium text-md">
@@ -120,6 +141,7 @@ function DetailDiskusi() {
                               {dayjs(reply.createdAt).fromNow()}
                             </span>
                             <p className="text-lg">{reply.contentReply}</p>
+                            
                           </div>
                         </div>
                       </li>
@@ -144,9 +166,12 @@ function DetailDiskusi() {
           </div>
         ) : (
           <div>Discussion not found</div>
-        )}
+            )}
       </div>
       </div>
+      <Footer />
+      
+      
       </>
   );
 }

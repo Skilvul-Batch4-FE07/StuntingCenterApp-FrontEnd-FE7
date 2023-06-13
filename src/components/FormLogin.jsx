@@ -1,40 +1,62 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { login } from '../features/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import { loginUser } from '../features/authSlice';
 import imgSide from '../assets/img/icon_bg.png';
 import imgBg from '../assets/bg-logreg.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { saveUserToApi, getUserFromApi } from '../utils/api';
 import { PersonCircle, Eye, EyeSlash, LockFill } from 'react-bootstrap-icons';
+import { getUserFromApi } from '../utils/api';
+
+const MySwal = withReactContent(Swal);
 
 const LoginForm = () => {
+  const error = useSelector((state) => state.auth.error);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLoginSuccess = () => {
-    navigate('/home');
+    setEmail('');
+    setPassword('');
+    MySwal.fire({
+      icon: 'success',
+      title: 'Login Successful',
+      showConfirmButton: false,
+      timer: 1500
+    }).then(() => {
+      navigate('/home');
+    });
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const loggedInUser = await getUserFromApi(email, password);
-    if (loggedInUser) {
-      dispatch(login(loggedInUser));
-      saveUserToApi(loggedInUser); 
-      setEmail('');
-      setPassword('');
-      setError('');
-      handleLoginSuccess();
-    } else {
-      setError('Invalid email or password');
-    }
-  };
+  const handleLogin = (event) => {
+    event.preventDefault();
 
-  const toggleShowPassword = () => {
+    getUserFromApi(email, password)
+      .then((user) => {
+        if (user) {
+          // Proses login sukses
+          console.log('Login berhasil:', user);
+          dispatch(loginUser(user)); // Memanggil loginUser dari authSlice
+          handleLoginSuccess();
+        } else {
+          // Proses login gagal
+          console.log('Login gagal: email atau password salah');
+          MySwal.fire({
+            icon: 'error',
+            title: 'Login Failed',
+            text: 'Email or password is incorrect',
+          });
+        }
+      })
+      .catch((error) => {
+        console.log('Terjadi kesalahan:', error);
+      });
+  };
+    const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
