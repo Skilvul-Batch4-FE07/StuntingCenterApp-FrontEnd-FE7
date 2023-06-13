@@ -1,11 +1,13 @@
-import { useState, useRef, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useContext } from "react";
+import { useState, useRef, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { ArticleContext } from "../../contexts/ArticleContext";
 
 const Article = () => {
   const maxScrollWidth = useRef(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const carousel = useRef(null);
-  const [articles, setArticles] = useState([]);
+  const {articles} = useContext(ArticleContext)
 
   const movePrev = () => {
     if (currentIndex > 0) {
@@ -23,35 +25,20 @@ const Article = () => {
   };
 
   const isDisabled = (direction) => {
-    if (direction === 'prev') {
+    if (direction === "prev") {
       return currentIndex <= 0 || articles.length === 0;
     }
 
-    if (direction === 'next' && carousel.current !== null) {
+    if (direction === "next" && carousel.current !== null) {
       return (
         carousel.current.offsetWidth * currentIndex >= maxScrollWidth.current ||
-        articles.length === 0
+        articles?.length === 0
       );
     }
 
     return false;
   };
 
-  useEffect(() => {
-    fetchArticles();
-  }, []);
-
-  const fetchArticles = async () => {
-    try {
-      const response = await fetch(
-        'https://644e64ed1b4567f4d5866c65.mockapi.io/article'
-      );
-      const data = await response.json();
-      setArticles(data.slice(0, 10));
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
 
   useEffect(() => {
     if (carousel !== null && carousel.current !== null) {
@@ -64,16 +51,19 @@ const Article = () => {
 
   return (
     <>
-      <h4 className="font-bold mb-5 text-4xl text-center" style={{ fontSize: '36px', color: 'black' }}>
-        Artikel
-      </h4>
+      <div className="text-center">
+        <h4 className="font-bold mb-4 text-3xl text-teal-600">Artikel</h4>
+        <p className="text-lg text-slate-800 mb-4">
+          Temukan berbagai informasi menarik tentang stunting
+        </p>
+      </div>
       <div className="carousel my-16 mx-20">
         <div className="relative overflow-hidden">
           <div className="flex justify-between absolute top left w-full h-full">
             <button
               onClick={movePrev}
-              className="hover:bg-blue-900/75 text-white w-10 h-full text-center opacity-75 hover:opacity-100 disabled:opacity-25 disabled:cursor-not-allowed z-10 p-0 m-0 transition-all ease-in-out duration-300"
-              disabled={isDisabled('prev')}
+              className="hover:bg-teal-500/75 text-white w-10 h-full text-center opacity-75 hover:opacity-100 disabled:opacity-25 disabled:cursor-not-allowed z-10 p-0 m-0 transition-all ease-in-out duration-300"
+              disabled={isDisabled("prev")}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -83,14 +73,18 @@ const Article = () => {
                 stroke="currentColor"
                 strokeWidth={2}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               <span className="sr-only">Prev</span>
             </button>
             <button
               onClick={moveNext}
-              className="hover:bg-blue-900/75 text-white w-10 h-full text-center opacity-75 hover:opacity-100 disabled:opacity-25 disabled:cursor-not-allowed z-10 p-0 m-0 transition-all ease-in-out duration-300"
-              disabled={isDisabled('next')}
+              className="hover:bg-teal-500/75 text-white w-10 h-full text-center opacity-75 hover:opacity-100 disabled:opacity-25 disabled:cursor-not-allowed z-10 p-0 m-0 transition-all ease-in-out duration-300"
+              disabled={isDisabled("next")}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -100,17 +94,21 @@ const Article = () => {
                 stroke="currentColor"
                 strokeWidth={2}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
               <span className="sr-only">Next</span>
             </button>
           </div>
-          {articles.length > 0 ? (
+          {articles?.length > 0 ? (
             <div
               ref={carousel}
               className="carousel-container relative flex gap-1 overflow-hidden scroll-smooth snap-x snap-mandatory touch-pan-x z-0"
             >
-              {articles.map((article, index) => {
+              {articles.slice(0,10).map((article, index) => {
                 return (
                   <div
                     key={index}
@@ -119,17 +117,17 @@ const Article = () => {
                     <a
                       href={article.link}
                       className="h-full w-full aspect-square block bg-origin-padding bg-left-top bg-cover bg-no-repeat z-0"
-                      style={{ backgroundImage: `url(${article.image || ''})` }}
+                      style={{ backgroundImage: `url(${article.image || ""})` }}
                     >
                       <img
-                        src={article.image || ''}
+                        src={article.image || ""}
                         alt={article.title}
                         className="w-full aspect-square hidden"
                       />
                     </a>
                     <a
                       href={article.link}
-                      className="h-full w-full aspect-square block absolute top-0 left-0 transition-opacity duration-300 opacity-0 hover:opacity-100 bg-blue-800/75 z-10"
+                      className="h-full w-full aspect-square block absolute top-0 left-0 transition-opacity duration-300 opacity-0 hover:opacity-100 bg-teal-500/75 z-10"
                     >
                       <h3 className="text-white py-6 px-3 mx-auto text-xl">
                         {article.title}
@@ -147,13 +145,9 @@ const Article = () => {
         </div>
       </div>
       <div className="flex justify-center mt-8">
-        <NavLink
-          to="forum"
-          className="btn py-3 px-5 text-xl"
-          style={{ fontSize: '16px' }}
-        >
-          Baca Selengkapnya
-        </NavLink>
+        <button className="py-3 px-5 text-lg bg-gradient-to-r from-teal-600 to-teal-300 rounded-full font-semibold text-white">
+          <NavLink to="/forum">Baca Selengkapnya</NavLink>
+        </button>
       </div>
     </>
   );

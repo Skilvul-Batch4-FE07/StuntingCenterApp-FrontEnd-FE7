@@ -1,4 +1,7 @@
+<<<<<<< HEAD
+=======
 import React, { useState } from 'react';
+>>>>>>> develop
 import { useDispatch } from 'react-redux';
 import { login } from '../features/authSlice';
 import imgSide from '../assets/img/icon_bg.png';
@@ -6,6 +9,10 @@ import imgBg from '../assets/bg-logreg.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { saveUserToApi, getUserFromApi } from '../utils/api';
 import { PersonCircle, Eye, EyeSlash, LockFill } from 'react-bootstrap-icons';
+<<<<<<< HEAD
+import { useState } from 'react';
+=======
+>>>>>>> develop
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -42,22 +49,41 @@ const LoginForm = () => {
     <div className='flex flex-col-reverse md:flex-row items-center justify-around min-h-screen font-sans'>
       <div className='w-full max-w-md flex overflow-hidden'>
         <div className='w-full p-8 mx-auto md:mx-0'>
+<<<<<<< HEAD
+          <div className='text-center mb-8'>
+            <h1 className='font-semibold text-2xl'>Bergabunglah dengan kami</h1>
+            <span>Temukan solusi bersama</span>
+          </div>
+          <div className='flex pb-8'>
+            <NavLink
+              to="/login"
+              className="text-xl font-bold flex-1 pl-10 underline"
+=======
           <div className='flex pb-8'>
             <NavLink
               to="/login"
               className="text-3xl font-bold flex-1 pl-10 underline"
+>>>>>>> develop
               style={{ color: "rgba(17, 118, 143, 255)" }}
             >
               Masuk
             </NavLink>
             <NavLink
               to="/register"
+<<<<<<< HEAD
+              className="text-xl font-bold flex-1 opacity-50"
+=======
               className="text-3xl font-bold flex-1 opacity-50"
+>>>>>>> develop
               style={{ color: "rgba(17, 118, 143, 255)" }}
             >
               Daftar
             </NavLink>
           </div>
+<<<<<<< HEAD
+          
+=======
+>>>>>>> develop
           <form onSubmit={handleLogin} className='px-0'>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <div className='mb-6 pb-4'>
@@ -141,9 +167,12 @@ const LoginForm = () => {
       
       <div className='w-full max-w-md flex bg-none overflow-hidden'>        
         <div className='w-full mx-auto md:mr-0'>
+<<<<<<< HEAD
+=======
           <h1 className="p-2 text-3xl font-bold mb-8"
             style={{ color: 'rgba(17, 118, 143, 255)' }}
           >Bergabunglah dengan Stunting Center dan temukan solusi bersama</h1>
+>>>>>>> develop
           <img src={imgSide} alt='Side Image' className='w-full' />
         </div>
       </div>

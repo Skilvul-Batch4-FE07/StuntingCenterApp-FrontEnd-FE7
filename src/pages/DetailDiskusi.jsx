@@ -40,16 +40,6 @@ function DetailDiskusi() {
     setNewComment("");
   };
 
-  // const handleSubmitComment = (e) => {
-  //   e.preventDefault();
-  //   if (newComment.contentReply.trim() === "") return;
-  //   const comments = {
-  //     contentReply: newComment.contentReply,
-  //   };
-  //   handlePostComment(comments);
-  //   setNewComment({ contentReply: "" });
-  // };
-
   const forum = forums.find((forum) => forum.id === id);
 
   return (
