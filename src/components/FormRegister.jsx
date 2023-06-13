@@ -149,20 +149,17 @@ const RegisterForm = () => {
                     <EyeSlash
                       onClick={togglePasswordVisibility}
                       style={{
-                        cursor: 'pointer',
-                        color: 'rgba(17, 118, 143, 255)',
+                        cursor: 'pointer', color: 'rgba(17, 118, 143, 255)'
                       }}
                     />
                   ) : (
                     <Eye
                       onClick={togglePasswordVisibility}
-                      style={{
-                        cursor: 'pointer',
-                        color: 'rgba(17, 118, 143, 255)',
-                      }}
+                      style={{ cursor: 'pointer', color: 'rgba(17, 118, 143, 255)' }}
                     />
                   )}
                 </div>
+
               </div>
             </div>
             <button
@@ -172,11 +169,11 @@ const RegisterForm = () => {
             >
               Daftar
             </button>
-            <p className='text-center text-gray-800 mb-4'>
-              Sudah punya akun?{' '}
+            <p className="text-center text-gray-800 mb-4">
+              Sudah punya akun?{" "}
               <NavLink
-                to='/login'
-                className='text-1xl font-bold text-gray-800'
+                to="/login"
+                className="text-1xl font-bold text-gray-800"
                 style={{ color: '#377389' }}
               >
                 Masuk
@@ -190,12 +187,9 @@ const RegisterForm = () => {
         style={{ overflow: 'hidden' }}
       >
         <div className='w-full mx-auto'>
-          <h1
-            className='p-2 text-3xl font-bold mb-8'
+          <h1 className="p-2 text-3xl font-bold mb-8"
             style={{ color: 'rgba(17, 118, 143, 255)' }}
-          >
-            Bergabunglah dengan Stunting Center dan temukan solusi bersama
-          </h1>
+          >Bergabunglah dengan Stunting Center dan temukan solusi bersama</h1>
           <img src={imgSide} alt='Side Image' className='w-full' />
         </div>
       </div>
@@ -206,5 +200,6 @@ const RegisterForm = () => {
     </div>
   );
 };
+
 
 export default RegisterForm;

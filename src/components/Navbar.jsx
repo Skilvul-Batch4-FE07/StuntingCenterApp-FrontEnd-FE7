@@ -1,3 +1,17 @@
+
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, NavLink } from "react-router-dom";
+import { logout, loadUser } from "../features/authSlice"; // Menambahkan loadUser dari authSlice
+import "../styles/index.css";
+import { MenuIcon, XIcon } from "@heroicons/react/solid";
+import {
+  AiFillHome,
+  AiFillFileText,
+  AiFillCalculator,
+  AiFillMessage,
+} from "react-icons/ai";
+
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
@@ -5,15 +19,25 @@ import { logout, loadUser } from '../features/authSlice';
 import { MenuIcon, XIcon } from '@heroicons/react/solid';
 import NavLogo from '../assets/img/logo_new2.png';
 
+
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.userProfile);
   const [showDropdown, setShowDropdown] = useState(false);
+
+  const [userName, setUserName] = useState("");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(loadUser());
+
   const [userName, setUserName] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    dispatch(loadUser()); // Memuat pengguna saat komponen Navbar dimuat
+
     dispatch(loadUser());
   }, [dispatch]);
 
@@ -25,7 +49,11 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+
+    navigate("/home");
+
     navigate('/home');
+
   };
 
   const toggleDropdown = () => {
@@ -37,6 +65,21 @@ const Navbar = () => {
   };
 
   return (
+    <header className="sticky top-0 z-50 py-2 bg-white">
+      <div className="flex justify-between items-center xl:max-w-7xl xl:mx-auto max-w-full flex-wrap px-4">
+        <NavLink to="/home" className="cursor-pointer">
+          <img
+            src={"https://i.postimg.cc/d3QWvCGR/logo-new1.png"}
+            alt="Logo"
+            className="sm:w-12 w-12"
+          />
+        </NavLink>
+        <div className="lg:hidden">
+          <button
+            className="flex items-center px-3 py-2 text-gray-500 border-gray-600 hover:text-blue-500 hover:border-blue-500"
+
+
+  return (
     <header className="border-b border-gray-300 sticky top-0 z-50 bg-white py-2">
       <div className="flex justify-between items-center xl:max-w-7xl xl:mx-auto max-w-full flex-wrap px-4">
         <NavLink to="/" className="cursor-pointer">
@@ -45,6 +88,7 @@ const Navbar = () => {
         <div className="lg:hidden">
           <button
             className="flex items-center px-3 py-2 border rounded text-gray-500 border-gray-600 hover:text-blue-500 hover:border-blue-500"
+
             onClick={toggleMobileMenu}
           >
             <svg
@@ -126,6 +170,7 @@ const Navbar = () => {
             )}
           </ul>
         </nav>
+
       </div>
     </header>
   );

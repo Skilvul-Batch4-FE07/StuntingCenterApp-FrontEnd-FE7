@@ -10,4 +10,11 @@
   max-height: 280px;
 }
 
+.features {
+  margin-top: -60px;
+}
+
+ul .active{
+  color: #14b8a6;
+}
 
