@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import { logout, loadUser } from "../features/authSlice"; // Menambahkan loadUser dari authSlice
-import "../components/style/landingpage.css";
+import "../styles/index.css";
 import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import {
   AiFillHome,

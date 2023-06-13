@@ -21,7 +21,7 @@ const ArticlePage = () => {
       <Navbar/>
     <div className="justify-center p-8 sm:px-24">
       <div>
-        <h1 className="text-3xl font-bold mb-8">Artikel Pilihan</h1>
+        <h1 className="text-2xl font-bold mb-8">Artikel Pilihan</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
           <div className="col-span-1">
             {articles
@@ -76,7 +76,7 @@ const ArticlePage = () => {
         </div>
       </div>
       <div>
-        <h1 className="text-3xl font-bold mb-8 mt-12">Artikel Terbaru</h1>
+        <h1 className="text-2xl font-bold mb-8 mt-12">Artikel Terbaru</h1>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-4">
           {articles
             ?.filter((article) => article.categori === "terbaru")

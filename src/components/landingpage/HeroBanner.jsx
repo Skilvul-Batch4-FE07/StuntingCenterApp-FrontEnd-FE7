@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-import "../style/landingpage.css";
 import { FaBook, FaCalculator, FaComments } from "react-icons/fa";
 
 const HeroBanner = () => {

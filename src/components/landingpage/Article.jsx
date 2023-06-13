@@ -1,11 +1,13 @@
+import { useContext } from "react";
 import { useState, useRef, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { ArticleContext } from "../../contexts/ArticleContext";
 
 const Article = () => {
   const maxScrollWidth = useRef(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const carousel = useRef(null);
-  const [articles, setArticles] = useState([]);
+  const {articles} = useContext(ArticleContext)
 
   const movePrev = () => {
     if (currentIndex > 0) {
@@ -30,28 +32,14 @@ const Article = () => {
     if (direction === "next" && carousel.current !== null) {
       return (
         carousel.current.offsetWidth * currentIndex >= maxScrollWidth.current ||
-        articles.length === 0
+        articles?.length === 0
       );
     }
 
     return false;
   };
 
-  useEffect(() => {
-    fetchArticles();
-  }, []);
 
-  const fetchArticles = async () => {
-    try {
-      const response = await fetch(
-        "https://644e64ed1b4567f4d5866c65.mockapi.io/article"
-      );
-      const data = await response.json();
-      setArticles(data.slice(0, 10));
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
 
   useEffect(() => {
     if (carousel !== null && carousel.current !== null) {
@@ -116,12 +104,12 @@ const Article = () => {
               <span className="sr-only">Next</span>
             </button>
           </div>
-          {articles.length > 0 ? (
+          {articles?.length > 0 ? (
             <div
               ref={carousel}
               className="carousel-container relative flex gap-1 overflow-hidden scroll-smooth snap-x snap-mandatory touch-pan-x z-0"
             >
-              {articles.map((article, index) => {
+              {articles.slice(0,10).map((article, index) => {
                 return (
                   <div
                     key={index}
@@ -159,7 +147,7 @@ const Article = () => {
       </div>
       <div className="flex justify-center mt-8">
         <button className="py-3 px-5 text-lg bg-gradient-to-r from-teal-600 to-teal-300 rounded-full font-semibold text-white">
-          <NavLink to="/article">Baca Selengkapnya</NavLink>
+          <NavLink to="/forum">Baca Selengkapnya</NavLink>
         </button>
       </div>
     </>

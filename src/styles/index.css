@@ -6,4 +6,11 @@
   max-height: 24rem;
 }
 
+.features {
+  margin-top: -60px;
+}
+
+ul .active{
+  color: #14b8a6;
+}
 
