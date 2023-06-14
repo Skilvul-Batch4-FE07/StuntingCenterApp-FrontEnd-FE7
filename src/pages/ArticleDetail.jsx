@@ -14,8 +14,8 @@ import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 import Navbar from "../components/Navbar";
-import Footer from "../components/landingpage/Footer";
 import Breadcrumb from "../components/Breadcrumb";
+import Footer from "../components/Footer";
 
 function ArticleDetail() {
   const { articles, isLoading } = useContext(ArticleContext);

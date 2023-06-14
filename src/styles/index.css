@@ -3,9 +3,15 @@
 @tailwind utilities;
 
 .changeArticle {
-  max-height: 24rem;
+  max-height: 486px;
 }
 
+.commentDetail {
+  max-height: 280px;
+}
+.forumDetail {
+  max-height: 500px;
+}
 .features {
   margin-top: -60px;
 }

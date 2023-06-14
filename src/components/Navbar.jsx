@@ -2,14 +2,15 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import "../styles/index.css";
-// import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import {
   AiFillHome,
   AiFillFileText,
   AiFillCalculator,
   AiFillMessage,
 } from "react-icons/ai";
-import { logout, loadUser } from "../features/authSlice";
+import { logout, loadUser, login } from "../features/authSlice";
+import { clearCurrentUser, getCurrentUser } from "../utils/localStorage";
+import { getUserFromApi } from "../utils/api";
 
 const NavbarPage = () => {
   const navigate = useNavigate();
@@ -26,13 +27,37 @@ const NavbarPage = () => {
   useEffect(() => {
     if (user) {
       setUserName(user.name);
+      localStorage.setItem("loggedInUser", user.name);
+    } else {
+      const storedUserName = getCurrentUser();
+      if (storedUserName) {
+        setUserName(storedUserName);
+      }
     }
   }, [user]);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/home");
-  };
+    useEffect(() => {
+    const currentUserId = getCurrentUser();
+    if (currentUserId) {
+      // Fetch data user dari mockAPI menggunakan currentUserId
+      getUserFromApi(currentUserId)
+        .then((user) => {
+          if (user) {
+            dispatch(login(user));
+          }
+        })
+        .catch((error) => {
+          console.log('Terjadi kesalahan:', error);
+        });
+    }
+  }, [dispatch]);
+
+const handleLogout = () => {
+  dispatch(logout());
+  localStorage.removeItem('loggedInUser');
+  clearCurrentUser();
+  navigate('/home');
+};
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -85,7 +110,7 @@ const NavbarPage = () => {
             >
               <button className="flex gap-2 items-center">
                 <AiFillHome className="text-lg" />
-                <NavLink to="/home">Home</NavLink>
+                <NavLink to="/">Home</NavLink>
               </button>
             </li>
             <li

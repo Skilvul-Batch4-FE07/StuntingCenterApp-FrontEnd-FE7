@@ -6,9 +6,9 @@ import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Navbar from "../components/Navbar";
-import Footer from "../components/landingpage/Footer";
 import Breadcrumb from "../components/Breadcrumb";
 import { useState } from "react";
+import Footer from "../components/Footer";
 
 const ArticlePage = () => {
   const { articles, isLoading } = useContext(ArticleContext);

@@ -105,7 +105,7 @@ const NavbarPage = () => {
             >
               <button className="flex gap-2 items-center">
                 <AiFillHome className="text-lg" />
-                <NavLink to="/home">Home</NavLink>
+                <NavLink to="/">Home</NavLink>
               </button>
             </li>
             <li

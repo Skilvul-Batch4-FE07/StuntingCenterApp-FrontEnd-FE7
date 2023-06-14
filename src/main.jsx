@@ -7,17 +7,20 @@ import RouterComponent from "./configurations/router";
 import { ArticleProvider } from "./contexts/ArticleContext";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ForumProvider } from "./contexts/ForumContext";
+// import { AuthProvider } from "./contexts/AuthContext"; 
 
 const queryClient = new QueryClient();
 
 ReactDOM.render(
   <QueryClientProvider client={queryClient}>
     <Provider store={store}>
-      <ArticleProvider>
-        <ForumProvider>
-          <RouterComponent />
-        </ForumProvider>
-      </ArticleProvider>
+      {/* <AuthProvider>  */}
+        <ArticleProvider>
+          <ForumProvider>
+            <RouterComponent />
+          </ForumProvider>
+        </ArticleProvider>
+      {/* </AuthProvider> */}
     </Provider>
   </QueryClientProvider>,
   document.getElementById("root")
