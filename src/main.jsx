@@ -1,9 +1,5 @@
 // main.js
-<<<<<<< HEAD
 import '../src/styles/index.css'
-=======
-import './styles/index.css'
->>>>>>> develop
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import store from "./configurations/store";

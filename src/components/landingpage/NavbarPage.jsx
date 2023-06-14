@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import "../../styles/index.css";
-import { MenuIcon, XIcon } from "@heroicons/react/solid";
+// import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import {
   AiFillHome,
   AiFillFileText,
@@ -59,82 +59,90 @@ const NavbarPage = () => {
   return (
     <header
       className={`sticky top-0 z-50 py-2 ${
-        isScrolled ? "transition-colors duration-500 bg-white" : ""
+        isScrolled ? "transition-colors duration-500 bg-white shadow-md" : ""
       }`}
     >
       <div className="flex justify-between items-center xl:max-w-7xl xl:mx-auto max-w-full flex-wrap px-4">
         <NavLink to="/home" className="cursor-pointer">
-          <img src={'https://i.postimg.cc/d3QWvCGR/logo-new1.png'} alt="Logo" className="sm:w-12 w-12" />
+          <img
+            src={"https://i.postimg.cc/d3QWvCGR/logo-new1.png"}
+            alt="Logo"
+            className="sm:w-12 w-12"
+          />
         </NavLink>
         <div className="lg:hidden">
           <button
-            className="flex items-center px-3 py-2 text-gray-500 hover:text-blue-500 hover:border-blue-500"
             onClick={toggleMobileMenu}
+            className="block text-white focus:outline-none"
           >
-            <svg
-              className="h-4 w-4 fill-current"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg className="h-6 w-6" viewBox="0 0 24 24">
               {isMobileMenuOpen ? (
-                <XIcon className="h-6 w-6" />
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M4 6h16v1H4V6zm0 6h16v-1H4v1zm16 4H4v1h16v-1z"
+                />
               ) : (
-                <MenuIcon className="h-6 w-6" />
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M4 5h16v1H4V5zm0 6h16v1H4v-1zm0 6h16v1H4v-1z"
+                />
               )}
             </svg>
           </button>
         </div>
-        <div>
-          <nav
-            className={`${
-              isMobileMenuOpen ? "block" : "hidden"
-            } lg:flex lg:items-center lg:w-auto w-full`}
-          >
-            <ul className="text-base text-gray-200 flex flex-col lg:flex-row items-center lg:justify-end lg:gap-8 space-x-3">
-              <li
-                className={`hover:text-teal-400 font-semibold text-md ${
-                  isScrolled ? "text-gray-500" : ""
-                }`}
-              >
-                <button className="flex gap-2 items-center">
-                  <AiFillHome className="text-lg" />
-                  <NavLink to="/home">Home</NavLink>
-                </button>
-              </li>
-              <li
-                className={`hover:text-teal-400 font-semibold text-md ${
-                  isScrolled ? "text-gray-500" : ""
-                }`}
-              >
-                <button className="flex items-center gap-2">
-                  <AiFillFileText className="text-lg" />
-                  <NavLink to="/article">Artikel</NavLink>
-                </button>
-              </li>
-              <li
-                className={`hover:text-teal-400 font-semibold text-md ${
-                  isScrolled ? "text-gray-500" : ""
-                }`}
-              >
-                <button className="flex items-center gap-2">
-                  <AiFillCalculator className="text-lg" />
-                  <NavLink to="/bmi">BMI</NavLink>
-                </button>
-              </li>
-              <li
-                className={`hover:text-teal-400 font-semibold text-md ${
-                  isScrolled ? "text-gray-500" : ""
-                }`}
-              >
-                <button className="flex items-center gap-2">
-                  <AiFillMessage className="text-lg" />
-                  <NavLink to="/forum">Forum Diskusi</NavLink>
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </div>
-        <div>
+        <nav
+          className={`${
+            isMobileMenuOpen ? "block justify-start" : "hidden"
+          } lg:flex lg:items-center lg:w-auto w-full`}
+        >
+          <ul className="text-base text-gray-200 flex flex-col lg:flex-row items-center lg:justify-end lg:gap-8 space-x-3">
+            <li
+              className={`hover:text-teal-400 font-semibold text-md ${
+                isScrolled ? "text-gray-500" : ""
+              }`}
+            >
+              <button className="flex gap-2 items-center">
+                <AiFillHome className="text-lg" />
+                <NavLink to="/home">Home</NavLink>
+              </button>
+            </li>
+            <li
+              className={`hover:text-teal-400 font-semibold text-md ${
+                isScrolled ? "text-gray-500" : ""
+              }`}
+            >
+              <button className="flex items-center gap-2">
+                <AiFillFileText className="text-lg" />
+                <NavLink to="/article">Artikel</NavLink>
+              </button>
+            </li>
+            <li
+              className={`hover:text-teal-400 font-semibold text-md ${
+                isScrolled ? "text-gray-500" : ""
+              }`}
+            >
+              <button className="flex items-center gap-2">
+                <AiFillCalculator className="text-lg" />
+                <NavLink to="/bmi">BMI</NavLink>
+              </button>
+            </li>
+            <li
+              className={`hover:text-teal-400 font-semibold text-md ${
+                isScrolled ? "text-gray-500" : ""
+              }`}
+            >
+              <button className="flex items-center gap-2">
+                <AiFillMessage className="text-lg" />
+                <NavLink to="/forum">Forum Diskusi</NavLink>
+              </button>
+            </li>
+          </ul>
+        </nav>
+        <div className={`${
+            isMobileMenuOpen ? "relative" : "hidden"
+          } lg:flex lg:items-center lg:w-auto w-full`}>
           {user && (
             <div className="lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6">
               <div
