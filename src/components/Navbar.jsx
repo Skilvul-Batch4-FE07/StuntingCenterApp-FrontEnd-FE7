@@ -94,8 +94,14 @@ const handleLogout = () => {
             <ul className="text-base text-gray-200 flex flex-col lg:flex-row items-center lg:justify-end lg:gap-8 space-x-3">
               <li className="hover:text-teal-400 font-semibold text-md text-gray-500">
                 <button className="flex gap-2 items-center">
-                  <AiFillHome className="menu text-lg" />
-                  <NavLink to="/home">Home</NavLink>
+                  <NavLink to="/">
+                    {({ isActive}) => (
+                      <>
+                        <AiFillHome className={`menu text-lg ${isActive ? "active" : ""}`} />
+                        <span className={isActive ? "active" : ""}>Home</span>
+                      </>
+                    )}
+                  </NavLink>
                 </button>
               </li>
               <li className="hover:text-teal-400 font-semibold text-md text-gray-500">

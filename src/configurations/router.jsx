@@ -30,6 +30,7 @@ const RouterComponent = () => {
         <Route path='/bmi' element= {<BmiPage/>} />
         <Route path="/forum/:id" element={<DetailDiskusi />} />
         <Route path="/bmi/history" element={<HistoryBmi/>} />
+
       </Routes>
     </Router>
   );

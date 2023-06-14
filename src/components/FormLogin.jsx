@@ -51,10 +51,6 @@ const LoginForm = () => {
     });
   };
 
-  const handleLogout = () => {
-    clearCurrentUser();
-    dispatch(logout());
-  };
 
   const handleLogin = (event) => {
     event.preventDefault();

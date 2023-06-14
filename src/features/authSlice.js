@@ -31,7 +31,7 @@ export const loadUser = () => {
       console.error('Error loading user:', error);
       throw error;
     }
-  };
+  };  
 };
 
 export const logoutUser = () => {
@@ -67,6 +67,7 @@ export const loginUser = (credentials) => async (dispatch) => {
     throw new Error('An error occurred while logging in');
   }
 };
+
 
 export const registerUser = (user) => async (dispatch) => {
   try {
