@@ -7,6 +7,8 @@ import { AiFillHome, AiFillFileText, AiFillCalculator, AiFillMessage } from "rea
 import { MenuIcon, XIcon } from '@heroicons/react/solid';
 import NavLogo from '../assets/img/logo_new2.png';
 import { getCurrentUser, clearCurrentUser } from "../utils/localStorage";
+import { getUserFromApi } from '../utils/api';
+import { login } from '../features/authSlice';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -28,11 +30,27 @@ const Navbar = () => {
     }
   }, [user]);
 
-  const handleLogout = () => {
+    useEffect(() => {
+    const currentUserId = getCurrentUser();
+    if (currentUserId) {
+      // Fetch data user dari mockAPI menggunakan currentUserId
+      getUserFromApi(currentUserId)
+        .then((user) => {
+          if (user) {
+            dispatch(login(user));
+          }
+        })
+        .catch((error) => {
+          console.log('Terjadi kesalahan:', error);
+        });
+    }
+  }, [dispatch]);
+
+const handleLogout = () => {
   dispatch(logout());
-  localStorage.removeItem("loggedInUser");
-  clearCurrentUser(); // Menghapus user dari localStorage
-  navigate("/home");
+  localStorage.removeItem('loggedInUser');
+  clearCurrentUser();
+  navigate('/home');
 };
 
   const toggleDropdown = () => {

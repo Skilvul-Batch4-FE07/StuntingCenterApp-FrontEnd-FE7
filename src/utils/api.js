@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiUrl = 'https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/users';
-
+const forumUrl = 'https://647d55a0af98471085499e81.mockapi.io/forums';
 export const getUsers = async () => {
   try {
     const response = await axios.get(apiUrl);
@@ -16,6 +16,15 @@ export const createUser = async (user) => {
   return response.data;
 };
 
+export const getUserById = async (userId) => {
+  try {
+    const response = await axios.get(`${apiUrl}/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Gagal mendapatkan data pengguna:', error);
+    throw error;
+  }
+};
 
 export const saveUserToApi = async (user) => {
   try {
@@ -76,17 +85,16 @@ export const fetchForum = () =>
     response.json()
   );
 
-export const postComment = (forumId) =>
-  fetch(
-    `https://647d55a0af98471085499e81.mockapi.io/forums/${forumId}/replies`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(),
-    }
-  ).then((response) => response.json());
+export const postComment = async (forumId, comment) => {
+  try {
+    const response = await axios.post(`${forumUrl}/${forumId}/replies`, comment);
+    return response.data;
+  } catch (error) {
+    console.error('Gagal memposting komentar:', error);
+    throw error;
+  }
+};
+
 
 export const postDiscussion = (discussion) =>
   fetch('https://647d55a0af98471085499e81.mockapi.io/forums', {

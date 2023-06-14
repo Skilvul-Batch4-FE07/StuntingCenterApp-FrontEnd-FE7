@@ -3,7 +3,7 @@ import { ForumContext } from "../contexts/ForumContext";
 import { BiComment, BiLike } from "react-icons/bi";
 import CommentForm from "../components/CommentForm";
 import { Loader } from "../components/Loader";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { AiOutlineWechat } from "react-icons/ai";
 import { BsChevronLeft } from "react-icons/bs";
 import { IoShareSocialOutline } from "react-icons/io5";
@@ -56,7 +56,7 @@ function DetailDiskusi() {
     const updatedForum = { ...forum };
     const newReply = {
       id: Date.now().toString(),
-      name: userProfile?.name || "",
+      name: name || "",
       contentReply: newComment,
       userProfile: userProfile?.profileUrl || "",
       createdAt: new Date().toISOString(),

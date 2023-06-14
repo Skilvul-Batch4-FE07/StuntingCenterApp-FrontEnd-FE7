@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../features/authSlice';
+import { login, logout } from '../features/authSlice';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import imgSide from '../assets/img/icon_bg.png';
@@ -8,7 +8,7 @@ import imgBg from '../assets/bg-logreg.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { PersonCircle, Eye, EyeSlash, LockFill } from 'react-bootstrap-icons';
 import { getUserFromApi } from '../utils/api';
-import { setCurrentUser } from '../utils/localStorage';
+import { setCurrentUser, getCurrentUser, clearCurrentUser } from '../utils/localStorage';
 const MySwal = withReactContent(Swal);
 
 const LoginForm = () => {
@@ -18,6 +18,22 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const currentUserId = getCurrentUser();
+    if (currentUserId) {
+      // Fetch data user dari mockAPI menggunakan currentUserId
+      getUserFromApi(currentUserId)
+        .then((user) => {
+          if (user) {
+            dispatch(login(user));
+          }
+        })
+        .catch((error) => {
+          console.log('Terjadi kesalahan:', error);
+        });
+    }
+  }, [dispatch]);
 
   const handleLoginSuccess = (user) => {
     setEmail('');
@@ -29,9 +45,15 @@ const LoginForm = () => {
       timer: 1500
     }).then(() => {
       localStorage.setItem('loggedInUser', user.name);
-    setCurrentUser(user.id);
+      setCurrentUser(user.id);
+      dispatch(login(user));
       navigate('/home');
     });
+  };
+
+  const handleLogout = () => {
+    clearCurrentUser();
+    dispatch(logout());
   };
 
   const handleLogin = (event) => {
@@ -40,12 +62,9 @@ const LoginForm = () => {
     getUserFromApi(email, password)
       .then((user) => {
         if (user) {
-          // Proses login sukses
           console.log('Login berhasil:', user);
-          dispatch(login(user)); // Memanggil login dari authSlice
           handleLoginSuccess(user);
         } else {
-          // Proses login gagal
           console.log('Login gagal: email atau password salah');
           MySwal.fire({
             icon: 'error',
@@ -68,8 +87,6 @@ const LoginForm = () => {
       <div className='w-full max-w-md flex overflow-hidden'>
         <div className='w-full p-8 mx-auto md:mx-0'>
           <div className='text-center mb-8'>
-            <h1 className='font-semibold text-2xl'>Bergabunglah dengan kami</h1>
-            <span>Temukan solusi bersama</span>
           </div>
           <div className='flex pb-8'>
             <NavLink

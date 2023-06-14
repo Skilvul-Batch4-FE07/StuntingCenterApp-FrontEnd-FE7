@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { ForumContext } from "../contexts/ForumContext";
 import { Loader } from "../components/Loader";
 import { BiComment, BiLike } from "react-icons/bi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -22,18 +22,20 @@ function ForumDiskusiPage() {
     const dispatch = useDispatch();
   const { forums, isLoading, commentData, handlePostDiscussion } =
     useContext(ForumContext);
-  const [isSwalShown, setIsSwalShown] = useState(false);
   const userProfile = useSelector((state) => state.auth.userProfile);
   const [name, setName] = useState('');
+  const navigate = useNavigate();
 
-    useEffect(() => {
+  useEffect(() => {
     const currentUser = getCurrentUser();
     if (!userProfile && currentUser) {
       dispatch(loadUser());
     } else if (userProfile) {
       setName(userProfile.name);
+    } else {
+      navigate("/login"); // Redirect to login page if userProfile.name is empty
     }
-    }, [dispatch, userProfile]);
+  }, [dispatch, navigate, userProfile]);
   
   const [newDiscussion, setNewDiscussion] = useState({
     title: "",
@@ -44,18 +46,6 @@ function ForumDiskusiPage() {
   dayjs.extend(relativeTime);
   dayjs.locale("id");
 
-  useEffect(() => {
-    if (!isSwalShown) {
-      Swal.fire({
-        title: "Himbauan",
-        text:
-          "Silahkan login terlebih dahulu agar bisa posting dan komentar atas nama anda",
-        icon: "info",
-        showConfirmButton: true,
-      });
-      setIsSwalShown(true);
-    }
-  }, [isSwalShown]);
 
   const handleSubmitDiscussion = (e) => {
     e.preventDefault();
@@ -65,24 +55,6 @@ function ForumDiskusiPage() {
     )
       return;
     
-    const currentUserId = getCurrentUser();
-    if (!currentUserId) {
-      Swal.fire({
-        title: "Error",
-        text: "Anda harus login terlebih dahulu",
-        icon: "error",
-      });
-      return;
-    }
-    const currentUser = getCurrentUser(currentUserId);
-    if (!currentUser) {
-      Swal.fire({
-        title: "Error",
-        text: "Data pengguna tidak valid",
-        icon: "error",
-      });
-      return;
-    }
 
     const discussion = {
       title: newDiscussion.title,
@@ -97,12 +69,11 @@ function ForumDiskusiPage() {
   if (isLoading) {
     return <Loader />;
   }
-
   return (
     <>
       <Navbar />
-      <div className="grid grid-cols-3 pt-10 justify-center mx-4 md:mx-32">
-        <div className="col-span-2">
+      <div className="pt-10 mx-4 md:mx-32">
+        <div className="max-w-2xl mx-auto">
           <div className="space-y-4 col-span-1 flex flex-col">
           
           <form onSubmit={handleSubmitDiscussion}>
@@ -129,14 +100,14 @@ function ForumDiskusiPage() {
             />
             <button
               type="submit"
-              className="bg-teal-500 text-white py-1 px-4 mt-2 rounded-md"
+              className=" bg-teal-500 text-white py-1 px-4 mt-2 rounded-md float-right"
             >
               Post Discussion
             </button>
           </form>
           </div>
           <div className="forumDetail overflow-y-auto overflow-x-hidden mt-8">
-          {forums.map((forum) => (
+            {forums.map((forum) => (
             <div key={forum.id} className="mb-8">
               <div className="max-w-2xl border-2 border-slate-200 rounded-lg shadow-lg p-4 space-y-4">
                 <div className="flex gap-4 items-center">

@@ -18,11 +18,6 @@ export const updateCurrentUser = (newName) => {
   }
 };
 
-export function getInitials(name) {
-  const names = name.split(" ");
-  const initials = names.map((n) => n[0].toUpperCase());
-  return initials.join("");
-}
 
 export const getUserFromLocalStorage = (userId) => {
   const userData = localStorage.getItem(userId);
@@ -31,6 +26,7 @@ export const getUserFromLocalStorage = (userId) => {
   }
   return null;
 };
+
 
 
 

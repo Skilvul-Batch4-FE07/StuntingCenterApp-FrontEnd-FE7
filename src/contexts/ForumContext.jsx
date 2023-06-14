@@ -1,6 +1,7 @@
 import { createContext, useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { fetchForum, postDiscussion, postComment } from "../utils/api";
+import { getCurrentUser } from "../utils/localStorage";
 
 export const ForumContext = createContext();
 
@@ -45,9 +46,9 @@ export const ForumProvider = ({ children }) => {
 
     try {
       const comment = {
-        name: "User",
+        name: getCurrentUser() || "User",
         contentReply: newComment,
-        userProfile: "user-profile-url", // Ganti dengan URL gambar profil pengguna
+        userProfile: getCurrentUser() || "user-profile-url",
         createdAt: new Date().toISOString(),
       };
 
@@ -69,6 +70,7 @@ export const ForumProvider = ({ children }) => {
         handlePostDiscussion,
         handlePostComment,
         postNewComment,
+        newComment,
         setNewComment, // Tambahkan setNewComment ke dalam value dari context
       }}
     >
