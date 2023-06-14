@@ -1,13 +1,32 @@
-const CURRENT_USER_ID_KEY = 'currentUserId';
 
-export const setCurrentUserId = (userId) => {
-  localStorage.setItem(CURRENT_USER_ID_KEY, userId);
+export const setCurrentUser = (userId) => {
+  localStorage.setItem('currentUser', userId);
 };
 
-export const getCurrentUserId = () => {
-  return localStorage.getItem(CURRENT_USER_ID_KEY);
+export const getCurrentUser = () => {
+  return localStorage.getItem('currentUser');
 };
 
-export const clearCurrentUserId = () => {
-  localStorage.removeItem(CURRENT_USER_ID_KEY);
+export const clearCurrentUser = () => {
+  localStorage.removeItem('currentUser');
 };
+
+export const updateCurrentUser = (newName) => {
+  const userId = getCurrentUser();
+  if (userId) {
+    setCurrentUser(newName);
+  }
+};
+
+
+export const getUserFromLocalStorage = (userId) => {
+  const userData = localStorage.getItem(userId);
+  if (userData) {
+    return JSON.parse(userData);
+  }
+  return null;
+};
+
+
+
+

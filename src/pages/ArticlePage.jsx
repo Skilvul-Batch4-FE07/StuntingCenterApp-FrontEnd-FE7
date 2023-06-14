@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const ArticlePage = () => {
   const { articles, isLoading } = useContext(ArticleContext);
@@ -104,6 +105,7 @@ const ArticlePage = () => {
         </div>
       </div>
       </div>
+      <Footer/>
       </>
   );
 };

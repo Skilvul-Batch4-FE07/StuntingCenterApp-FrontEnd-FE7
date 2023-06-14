@@ -1,44 +1,77 @@
-<<<<<<< HEAD
-=======
-import React, { useState } from 'react';
->>>>>>> develop
-import { useDispatch } from 'react-redux';
-import { login } from '../features/authSlice';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, logout } from '../features/authSlice';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 import imgSide from '../assets/img/icon_bg.png';
 import imgBg from '../assets/bg-logreg.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { saveUserToApi, getUserFromApi } from '../utils/api';
 import { PersonCircle, Eye, EyeSlash, LockFill } from 'react-bootstrap-icons';
-<<<<<<< HEAD
-import { useState } from 'react';
-=======
->>>>>>> develop
+import { getUserFromApi } from '../utils/api';
+import { setCurrentUser, getCurrentUser, clearCurrentUser } from '../utils/localStorage';
+const MySwal = withReactContent(Swal);
 
 const LoginForm = () => {
+  const error = useSelector((state) => state.auth.error);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLoginSuccess = () => {
-    navigate('/home');
+  useEffect(() => {
+    const currentUserId = getCurrentUser();
+    if (currentUserId) {
+      // Fetch data user dari mockAPI menggunakan currentUserId
+      getUserFromApi(currentUserId)
+        .then((user) => {
+          if (user) {
+            dispatch(login(user));
+          }
+        })
+        .catch((error) => {
+          console.log('Terjadi kesalahan:', error);
+        });
+    }
+  }, [dispatch]);
+
+  const handleLoginSuccess = (user) => {
+    setEmail('');
+    setPassword('');
+    MySwal.fire({
+      icon: 'success',
+      title: 'Login Successful',
+      showConfirmButton: false,
+      timer: 1500
+    }).then(() => {
+      localStorage.setItem('loggedInUser', user.name);
+      setCurrentUser(user.id);
+      dispatch(login(user));
+      navigate('/home');
+    });
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const loggedInUser = await getUserFromApi(email, password);
-    if (loggedInUser) {
-      dispatch(login(loggedInUser));
-      saveUserToApi(loggedInUser); 
-      setEmail('');
-      setPassword('');
-      setError('');
-      handleLoginSuccess();
-    } else {
-      setError('Invalid email or password');
-    }
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+
+    getUserFromApi(email, password)
+      .then((user) => {
+        if (user) {
+          console.log('Login berhasil:', user);
+          handleLoginSuccess(user);
+        } else {
+          console.log('Login gagal: email atau password salah');
+          MySwal.fire({
+            icon: 'error',
+            title: 'Login Failed',
+            text: 'Email or password is incorrect',
+          });
+        }
+      })
+      .catch((error) => {
+        console.log('Terjadi kesalahan:', error);
+      });
   };
 
   const toggleShowPassword = () => {
@@ -49,41 +82,24 @@ const LoginForm = () => {
     <div className='flex flex-col-reverse md:flex-row items-center justify-around min-h-screen font-sans'>
       <div className='w-full max-w-md flex overflow-hidden'>
         <div className='w-full p-8 mx-auto md:mx-0'>
-<<<<<<< HEAD
           <div className='text-center mb-8'>
-            <h1 className='font-semibold text-2xl'>Bergabunglah dengan kami</h1>
-            <span>Temukan solusi bersama</span>
           </div>
           <div className='flex pb-8'>
             <NavLink
               to="/login"
-              className="text-xl font-bold flex-1 pl-10 underline"
-=======
-          <div className='flex pb-8'>
-            <NavLink
-              to="/login"
               className="text-3xl font-bold flex-1 pl-10 underline"
->>>>>>> develop
               style={{ color: "rgba(17, 118, 143, 255)" }}
             >
               Masuk
             </NavLink>
             <NavLink
               to="/register"
-<<<<<<< HEAD
-              className="text-xl font-bold flex-1 opacity-50"
-=======
               className="text-3xl font-bold flex-1 opacity-50"
->>>>>>> develop
               style={{ color: "rgba(17, 118, 143, 255)" }}
             >
               Daftar
             </NavLink>
           </div>
-<<<<<<< HEAD
-          
-=======
->>>>>>> develop
           <form onSubmit={handleLogin} className='px-0'>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <div className='mb-6 pb-4'>
@@ -127,7 +143,7 @@ const LoginForm = () => {
                   onClick={toggleShowPassword}
                   style={{ padding: '4px' }}
                 >
-                  {showPassword ? <EyeSlash color="rgba(17, 118, 143, 255)"/> : <Eye color="rgba(17, 118, 143, 255)"/>}
+                  {showPassword ? <EyeSlash color="rgba(17, 118, 143, 255)" /> : <Eye color="rgba(17, 118, 143, 255)" />}
                 </div>
               </div>
             </div>
@@ -152,7 +168,8 @@ const LoginForm = () => {
               >
                 Daftar
               </NavLink>
-              {" "}atau <br></br><NavLink
+              {" "}atau <br></br>
+              <NavLink
                 to="/home"
                 className="text-1xl font-bold text-gray-800"
                 style={{ color: '#377389' }}
@@ -160,19 +177,17 @@ const LoginForm = () => {
                 Kembali ke halaman utama
               </NavLink>
             </p>
-
           </form>
         </div>
       </div>
-      
-      <div className='w-full max-w-md flex bg-none overflow-hidden'>        
+      <div className='w-full max-w-md flex bg-none overflow-hidden'>
         <div className='w-full mx-auto md:mr-0'>
-<<<<<<< HEAD
-=======
-          <h1 className="p-2 text-3xl font-bold mb-8"
+          <h1
+            className="p-2 text-3xl font-bold mb-8"
             style={{ color: 'rgba(17, 118, 143, 255)' }}
-          >Bergabunglah dengan Stunting Center dan temukan solusi bersama</h1>
->>>>>>> develop
+          >
+            Bergabunglah dengan Stunting Center dan temukan solusi bersama
+          </h1>
           <img src={imgSide} alt='Side Image' className='w-full' />
         </div>
       </div>
