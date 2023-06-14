@@ -21,11 +21,10 @@ const RouterComponent = () => {
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
-        <Route path='/home' element={<HomePages />} />
+        <Route path='/' element={<HomePages />} />
         <Route path='/article' element={<ArticlePage />} />
         <Route path="/article/:id" element={<ArticleDetail />} />        
         <Route path='/profile' element={<ProfilePage />} />
-        <Route path='/' element={<Navigate to='/login' />} />
         <Route path='/forum' element= {<ForumPage/>} />
         <Route path='/bmi' element= {<BmiPage/>} />
         <Route path="/forum/:id" element={<DetailDiskusi />} />

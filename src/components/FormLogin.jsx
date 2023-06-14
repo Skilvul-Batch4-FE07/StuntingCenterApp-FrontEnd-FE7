@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, logout } from '../features/authSlice';
+import { login } from '../features/authSlice';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import imgSide from '../assets/img/icon_bg.png';
@@ -8,7 +8,7 @@ import imgBg from '../assets/bg-logreg.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { PersonCircle, Eye, EyeSlash, LockFill } from 'react-bootstrap-icons';
 import { getUserFromApi } from '../utils/api';
-import { setCurrentUser, getCurrentUser, clearCurrentUser } from '../utils/localStorage';
+import { setCurrentUser, getCurrentUser } from '../utils/localStorage';
 const MySwal = withReactContent(Swal);
 
 const LoginForm = () => {
@@ -47,7 +47,7 @@ const LoginForm = () => {
       localStorage.setItem('loggedInUser', user.name);
       setCurrentUser(user.id);
       dispatch(login(user));
-      navigate('/home');
+      navigate('/');
     });
   };
 
