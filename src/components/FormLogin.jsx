@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../features/authSlice';
@@ -9,6 +8,7 @@ import imgBg from '../assets/bg-logreg.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { PersonCircle, Eye, EyeSlash, LockFill } from 'react-bootstrap-icons';
 import { getUserFromApi } from '../utils/api';
+import { setCurrentUser } from '../utils/localStorage';
 const MySwal = withReactContent(Swal);
 
 const LoginForm = () => {
@@ -19,7 +19,7 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = (user) => {
     setEmail('');
     setPassword('');
     MySwal.fire({
@@ -28,6 +28,8 @@ const LoginForm = () => {
       showConfirmButton: false,
       timer: 1500
     }).then(() => {
+      localStorage.setItem('loggedInUser', user.name);
+    setCurrentUser(user.id);
       navigate('/home');
     });
   };
@@ -40,8 +42,8 @@ const LoginForm = () => {
         if (user) {
           // Proses login sukses
           console.log('Login berhasil:', user);
-          dispatch(loginUser(user)); // Memanggil loginUser dari authSlice
-          handleLoginSuccess();
+          dispatch(login(user)); // Memanggil login dari authSlice
+          handleLoginSuccess(user);
         } else {
           // Proses login gagal
           console.log('Login gagal: email atau password salah');
@@ -56,7 +58,8 @@ const LoginForm = () => {
         console.log('Terjadi kesalahan:', error);
       });
   };
-    const toggleShowPassword = () => {
+
+  const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
@@ -64,7 +67,6 @@ const LoginForm = () => {
     <div className='flex flex-col-reverse md:flex-row items-center justify-around min-h-screen font-sans'>
       <div className='w-full max-w-md flex overflow-hidden'>
         <div className='w-full p-8 mx-auto md:mx-0'>
-
           <div className='text-center mb-8'>
             <h1 className='font-semibold text-2xl'>Bergabunglah dengan kami</h1>
             <span>Temukan solusi bersama</span>
@@ -72,31 +74,19 @@ const LoginForm = () => {
           <div className='flex pb-8'>
             <NavLink
               to="/login"
-              className="text-xl font-bold flex-1 pl-10 underline">
-              
-              </NavLink>
-
-          <div className='flex pb-8'>
-            <NavLink
-              to="/login"
               className="text-3xl font-bold flex-1 pl-10 underline"
-
               style={{ color: "rgba(17, 118, 143, 255)" }}
             >
               Masuk
             </NavLink>
             <NavLink
               to="/register"
-
-              className="text-xl font-bold flex-1 opacity-50"
-
+              className="text-3xl font-bold flex-1 opacity-50"
               style={{ color: "rgba(17, 118, 143, 255)" }}
             >
               Daftar
             </NavLink>
           </div>
-
-
           <form onSubmit={handleLogin} className='px-0'>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <div className='mb-6 pb-4'>
@@ -140,7 +130,7 @@ const LoginForm = () => {
                   onClick={toggleShowPassword}
                   style={{ padding: '4px' }}
                 >
-                  {showPassword ? <EyeSlash color="rgba(17, 118, 143, 255)"/> : <Eye color="rgba(17, 118, 143, 255)"/>}
+                  {showPassword ? <EyeSlash color="rgba(17, 118, 143, 255)" /> : <Eye color="rgba(17, 118, 143, 255)" />}
                 </div>
               </div>
             </div>
@@ -165,7 +155,8 @@ const LoginForm = () => {
               >
                 Daftar
               </NavLink>
-              {" "}atau <br></br><NavLink
+              {" "}atau <br></br>
+              <NavLink
                 to="/home"
                 className="text-1xl font-bold text-gray-800"
                 style={{ color: '#377389' }}
@@ -173,18 +164,17 @@ const LoginForm = () => {
                 Kembali ke halaman utama
               </NavLink>
             </p>
-
           </form>
         </div>
       </div>
-      
-      <div className='w-full max-w-md flex bg-none overflow-hidden'>        
+      <div className='w-full max-w-md flex bg-none overflow-hidden'>
         <div className='w-full mx-auto md:mr-0'>
-
-          <h1 className="p-2 text-3xl font-bold mb-8"
+          <h1
+            className="p-2 text-3xl font-bold mb-8"
             style={{ color: 'rgba(17, 118, 143, 255)' }}
-          >Bergabunglah dengan Stunting Center dan temukan solusi bersama</h1>
-
+          >
+            Bergabunglah dengan Stunting Center dan temukan solusi bersama
+          </h1>
           <img src={imgSide} alt='Side Image' className='w-full' />
         </div>
       </div>
@@ -192,10 +182,8 @@ const LoginForm = () => {
         className='fixed inset-0 bg-cover bg-center bg-no-repeat'
         style={{ backgroundImage: `url(${imgBg})`, zIndex: '-1' }}
       ></div>
-      </div>
-      </div>
-      );
+    </div>
+  );
 };
-
 
 export default LoginForm;

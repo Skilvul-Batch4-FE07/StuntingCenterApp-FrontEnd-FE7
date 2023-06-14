@@ -1,7 +1,8 @@
+// authSlice.js
+
 import { createSlice } from '@reduxjs/toolkit';
 import { getUsers, createUser } from '../utils/api';
 import {
-  saveUserToApi,
   getUserFromApi,
   removeUserFromApi,
   updateUserInApi,
@@ -90,7 +91,7 @@ export const updateUserProfile = (userId, updatedUser) => {
 };
 
 const initialState = {
-  user: null,
+  user: getCurrentUser(),
   loggedIn: false,
   userProfile: null,
 };

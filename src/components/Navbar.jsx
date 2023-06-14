@@ -1,42 +1,39 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
-import { logout, loadUser } from "../features/authSlice";
+import { logout} from "../features/authSlice";
 import "../styles/index.css";
-import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import { AiFillHome, AiFillFileText, AiFillCalculator, AiFillMessage } from "react-icons/ai";
-
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate, NavLink } from 'react-router-dom';
-import { logout, loadUser } from '../features/authSlice';
-import '../components/style/landingpage.css';
 import { MenuIcon, XIcon } from '@heroicons/react/solid';
-
 import NavLogo from '../assets/img/logo_new2.png';
+import { getCurrentUser, clearCurrentUser } from "../utils/localStorage";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.userProfile);
-  const [showDropdown, setShowDropdown] = useState(false);
   const [userName, setUserName] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    dispatch(loadUser());
-  }, [dispatch]);
-
+  const user = useSelector((state) => state.auth.userProfile);
+  const [showDropdown, setShowDropdown] = useState(false);
+  
   useEffect(() => {
     if (user) {
       setUserName(user.name);
+      localStorage.setItem("loggedInUser", user.name);
+    } else {
+      const storedUserName = getCurrentUser();
+      if (storedUserName) {
+        setUserName(storedUserName);
+      }
     }
   }, [user]);
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/home");
-  };
+  dispatch(logout());
+  localStorage.removeItem("loggedInUser");
+  clearCurrentUser(); // Menghapus user dari localStorage
+  navigate("/home");
+};
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -45,6 +42,7 @@ const Navbar = () => {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
 
   return (
     <header className="border-b border-gray-300 sticky top-0 z-50 bg-white py-2">

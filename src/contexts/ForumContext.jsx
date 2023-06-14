@@ -1,18 +1,16 @@
 import { createContext, useState } from "react";
-import { useQuery, useQueryClient , useMutation } from "react-query";
+import { useQuery, useQueryClient, useMutation } from "react-query";
 import { fetchForum, postDiscussion, postComment } from "../utils/api";
-
 
 export const ForumContext = createContext();
 
-// eslint-disable-next-line react/prop-types
 export const ForumProvider = ({ children }) => {
   const queryClient = useQueryClient();
   const { data: forums, isLoading } = useQuery("forums", fetchForum);
   const [commentData, setCommentData] = useState({});
   const [userData, setUserData] = useState(null);
+  const [newComment, setNewComment] = useState(""); // Tambahkan state untuk komentar baru
 
-  
   const handleCommentClick = (forumId) => {
     setCommentData((prevData) => {
       const updatedData = { ...prevData };
@@ -42,22 +40,22 @@ export const ForumProvider = ({ children }) => {
     });
   };
 
-const handlePostComment = async (forumId, newComment) => {
-    if (newComment.trim() === '') return;
+  const handlePostComment = async (forumId, newComment) => {
+    if (newComment.trim() === "") return;
 
     try {
       const comment = {
-        name: 'User',
+        name: "User",
         contentReply: newComment,
-        userProfile: 'user-profile-url', // Ganti dengan URL gambar profil pengguna
+        userProfile: "user-profile-url", // Ganti dengan URL gambar profil pengguna
         createdAt: new Date().toISOString(),
       };
 
       await postComment(forumId, comment);
-      queryClient.invalidateQueries('forums');
-      setNewComment('');
+      queryClient.invalidateQueries("forums");
+      setNewComment("");
     } catch (error) {
-      console.error('Gagal mengirim komentar:', error);
+      console.error("Gagal mengirim komentar:", error);
     }
   };
 
@@ -70,7 +68,8 @@ const handlePostComment = async (forumId, newComment) => {
         handleCommentClick,
         handlePostDiscussion,
         handlePostComment,
-        postNewComment
+        postNewComment,
+        setNewComment, // Tambahkan setNewComment ke dalam value dari context
       }}
     >
       {children}

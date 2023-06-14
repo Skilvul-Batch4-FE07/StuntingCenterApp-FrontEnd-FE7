@@ -1,32 +1,20 @@
 import React, { createContext, useState } from "react";
 
-// Create the AuthContext
 export const AuthContext = createContext();
 
-// Create the AuthContextProvider component
-export const AuthContextProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Initially, no user is logged in
+export const AuthProvider = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Function to handle login
-  const login = (userData) => {
-    // Assuming the userData parameter contains the user's information
-    setUser(userData);
+  const login = () => {
+    setIsLoggedIn(true);
   };
 
-  // Function to handle logout
   const logout = () => {
-    setUser(null);
-  };
-
-  // Value object to be provided by the AuthContext
-  const authContextValue = {
-    user,
-    login,
-    logout,
+    setIsLoggedIn(false);
   };
 
   return (
-    <AuthContext.Provider value={authContextValue}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
