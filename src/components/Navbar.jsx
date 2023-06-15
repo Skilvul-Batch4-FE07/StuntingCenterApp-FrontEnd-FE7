@@ -132,7 +132,7 @@ const Navbar = () => {
         </div>
         <div>
           {user && (
-            <div className="lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6 bg-black rounded-full">
+            <div className="lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6">
               <div
                 className="flex items-center cursor-pointer hover:text-primary"
                 onClick={toggleDropdown}
