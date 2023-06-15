@@ -162,13 +162,13 @@ function BmiCalculator() {
   return (
     <>
       <section className="justify-center p-8 sm:px-24">
-        <div className="grid grid-cols-2">
-          <div className="bg-teal-300 flex flex-col max-w-md rounded-lg">
-            <div className="p-6 space-y-4">
-              <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-xl">
-                BMI Kalkulator
-              </h1>
-              <form className="space-y-3 md:space-y-4">
+        <div className="grid grid-cols-2 bg-teal-500 rounded-lg p-4 gap-4">
+          <div className=" flex flex-col max-w-full rounded-lg">
+            <div className="space-y-4">
+              <form className="space-y-3 md:space-y-4 bg-teal-300 p-4 rounded-lg">
+                <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-xl">
+                  BMI Kalkulator
+                </h1>
                 <div>
                   <p
                     className="block mb-2 text-sm font-medium text-gray-900"
@@ -288,10 +288,10 @@ function BmiCalculator() {
             </div>
             <div>
               {result && (
-                <div className="p-4 bg-slate-300 mx-6 mb-6 rounded-xl">
-                  <h4 className="mb-2 text-sm font-medium text-gray-700">
+                <div className="p-4 bg-slate-300 my-6 rounded-xl">
+                  <p className="mb-2 text-sm font-medium text-gray-700">
                     Hasil:
-                  </h4>
+                  </p>
                   <ul className="list-disc pl-6">
                     <li>Nama: {name}</li>
                     <li>Usia: {ageBaby}</li>
@@ -303,13 +303,13 @@ function BmiCalculator() {
               )}
             </div>
           </div>
-          <div className="flex flex-col lg:py-0">
-            <div className="space-y-4">
+          <div className="flex flex-col">
+            <div className="space-y-4 bg-gray-300 p-4 rounded-lg">
               <h1 className="text-lg font-bold text-center leading-tight tracking-tight md:text-xl">
                 Riwayat BMI
               </h1>
               {bmiHistory.length > 0 ? (
-                <div className="bg-gray-300 p-4 rounded-lg">
+                <div>
                   <table className="w-full border-collapse">
                     <thead className="text-md text-left font-medium text-gray-900">
                       <tr>
@@ -350,9 +350,7 @@ function BmiCalculator() {
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-900">
-                  Belum ada data BMI yang tersimpan.
-                </p>
+                <p className="text-gray-900">Riwayat BMI kosong</p>
               )}
             </div>
           </div>

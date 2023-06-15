@@ -1,12 +1,13 @@
 import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 import { HeroBmi } from "../components/bmi/HeroBmi";
 import BmiCalculator from "../components/bmicalculator";
-import NavbarPage from "../components/landingpage/NavbarPage";
+// import NavbarPage from "../components/landingpage/NavbarPage";
 
 const BmiPage = () => {
   return (
     <>
-      <NavbarPage />
+      <Navbar />
       <HeroBmi/>
       <BmiCalculator />
       <Footer />

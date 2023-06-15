@@ -22,7 +22,19 @@ function ArticleDetail() {
   const { id } = useParams();
   const article = articles.find((article) => article.id === id);
   const breadcrumbItems = [
-    { title: "Home", url: "/" },
+    {
+      title: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+        </svg>
+      ),
+      url: "/",
+    },
     { title: "Article", url: "/article" },
     { title: article ? article.title : "Article Title" },
   ];
@@ -33,7 +45,6 @@ function ArticleDetail() {
   if (isLoading) {
     return <Loader />;
   }
-
 
   return (
     <>
@@ -58,7 +69,7 @@ function ArticleDetail() {
             </div>
           </div>
           <div className="sm:max-w-2xl w-full px-4">
-          <Breadcrumb items={breadcrumbItems} />
+            <Breadcrumb items={breadcrumbItems} />
             {article ? (
               <div key={article.id}>
                 <h1 className="font-bold text-3xl">{article.title}</h1>
