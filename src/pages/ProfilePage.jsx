@@ -42,7 +42,7 @@ const ProfilePage = () => {
   const handleLogout = () => {
     dispatch(logout());
     clearCurrentUser(); // Menghapus data pengguna dari localStorage saat logout
-    navigate('/home');
+    navigate('/');
   };
 
   if (!userProfile) {

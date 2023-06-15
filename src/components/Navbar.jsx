@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
-import { logout } from "../features/authSlice";
+import { logout ,login} from "../features/authSlice";
 import "../styles/index.css";
 import {
   AiFillHome,
@@ -9,7 +9,6 @@ import {
   AiFillCalculator,
   AiFillMessage,
 } from "react-icons/ai";
-import { logout, loadUser, login } from "../features/authSlice";
 import { clearCurrentUser, getCurrentUser } from "../utils/localStorage";
 import { getUserFromApi } from "../utils/api";
 
@@ -18,6 +17,8 @@ const NavbarPage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.userProfile);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     const storedUser = localStorage.getItem("loggedInUser");
