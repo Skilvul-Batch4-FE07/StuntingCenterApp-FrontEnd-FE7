@@ -1,11 +1,17 @@
-import BmiCalculator from "../components/BmiCalculator"
+import Footer from "../components/Footer";
+import { HeroBmi } from "../components/bmi/HeroBmi";
+import BmiCalculator from "../components/bmicalculator";
+import NavbarPage from "../components/landingpage/NavbarPage";
 
 const BmiPage = () => {
-    return (
-        <>
-            <BmiCalculator/>
-        </>
-     )
-}
+  return (
+    <>
+      <NavbarPage />
+      <HeroBmi/>
+      <BmiCalculator />
+      <Footer />
+    </>
+  );
+};
 
-export default BmiPage
+export default BmiPage;

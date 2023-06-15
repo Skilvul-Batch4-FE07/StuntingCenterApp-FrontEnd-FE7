@@ -1,8 +1,7 @@
 import {
   BrowserRouter as Router,
   Route,
-  Routes,
-  Navigate
+  Routes
 } from 'react-router-dom'
 import Login from '../pages/LoginPage'
 import Register from '../pages/RegisterPage'
@@ -13,7 +12,7 @@ import ArticlePage from '../pages/ArticlePage'
 import ArticleDetail from '../pages/ArticleDetail'
 import DetailDiskusi from '../pages/DetailDiskusi'
 import BmiPage from '../pages/BmiPage'
-import HistoryBmi from '../pages/HistoryBmi'
+// import CardLineChart from '../components/bmi/Chart'
 
 const RouterComponent = () => {
   return (
@@ -28,8 +27,6 @@ const RouterComponent = () => {
         <Route path='/forum' element= {<ForumPage/>} />
         <Route path='/bmi' element= {<BmiPage/>} />
         <Route path="/forum/:id" element={<DetailDiskusi />} />
-        <Route path="/bmi/history" element={<HistoryBmi/>} />
-
       </Routes>
     </Router>
   );

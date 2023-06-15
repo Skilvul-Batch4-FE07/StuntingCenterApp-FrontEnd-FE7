@@ -12,7 +12,7 @@ import { logout, loadUser, login } from "../features/authSlice";
 import { clearCurrentUser, getCurrentUser } from "../utils/localStorage";
 import { getUserFromApi } from "../utils/api";
 
-const NavbarPage = () => {
+const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.userProfile);
@@ -199,4 +199,4 @@ const handleLogout = () => {
   );
 };
 
-export default NavbarPage;
+export default Navbar;

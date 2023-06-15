@@ -68,8 +68,8 @@ const ArticlePage = () => {
                   </div>
                 ))}
             </div>
-            <div className="changeArticle overflow-y-auto overflow-x-hidden">
-              <div className="">
+            <div className="overflow-y-auto h-96 overflow-x-hidden">
+              <div>
                 {articles
                   ?.filter((article) => article.categori === "pilihan")
                   .map((article) => (

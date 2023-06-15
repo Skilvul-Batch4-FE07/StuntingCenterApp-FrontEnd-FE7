@@ -2,18 +2,17 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { loadUser } from "../features/authSlice";
-import { NavLink, useNavigate } from "react-router-dom";
-import Footer from "./Footer";
-import Navbar from "./Navbar";
+import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../utils/localStorage";
 import Swal from "sweetalert2";
-import { AiOutlineArrowLeft } from "react-icons/ai";
-import swal from "sweetalert";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function BmiCalculator() {
   const [bmiHistory, setBmiHistory] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [namaInput, setNamaInput] = useState("");
-  const [umurInput, setUmurInput] = useState("");
+  const [ageBaby, setAgeBaby] = useState("");
   const [tinggiInput, setTinggiInput] = useState("");
   const [beratInput, setBeratInput] = useState("");
   const [jenisKelamin, setJenisKelamin] = useState();
@@ -26,6 +25,10 @@ function BmiCalculator() {
   const [bmiResult, setBmiResult] = useState(0);
   const [bmiCategory, setBmiCategory] = useState("");
   const navigate = useNavigate();
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
   useEffect(() => {
     axios
@@ -103,23 +106,35 @@ function BmiCalculator() {
         }
       }
 
+      const currentDate = new Date();
+      const selectedDateOfBirth = new Date(selectedDate);
+      const ageDiff = Math.floor(
+        (currentDate - selectedDateOfBirth) / (1000 * 60 * 60 * 24 * 30.44)
+      );
+      const years = Math.floor(ageDiff / 12);
+      const months = ageDiff % 12;
+      const ageBabyText =
+        years !== 0 ? `${years} tahun ${months} bulan` : `${months} bulan`;
+      setAgeBaby(ageBabyText);
+
       setResult(
-        `Nama: ${name}, Umur: ${umurInput},Jenis Kelamin: ${genderString}, BMI: ${bmiResult}, Kategori: ${
+        `Nama: ${name}, Usia anak: ${ageBaby}, Jenis Kelamin: ${genderString}, BMI: ${bmiResult}, Kategori: ${
           jenisKelamin === "Perempuan" ? bmiCategoryWomen : bmiCategory
         }`
       );
+
       setBmiResult(bmiResult);
       setBmiCategory(bmiCategory);
 
       const data = {
         name: name,
-        age: umurInput,
+        age: `${years} tahun ${months} bulan`,
         gender: jenisKelamin,
         height: tinggiInput,
         weight: beratInput,
         result: bmiResult,
-
         category: jenisKelamin === "Perempuan" ? bmiCategoryWomen : bmiCategory,
+        createdAt: Date.now(),
       };
 
       axios
@@ -129,6 +144,7 @@ function BmiCalculator() {
         )
         .then((response) => {
           console.log(response);
+          setBmiHistory([...bmiHistory, response.data]);
         })
         .catch((error) => {
           console.error(error);
@@ -145,15 +161,14 @@ function BmiCalculator() {
 
   return (
     <>
-      <Navbar />
-      <section className="min-h-screen flex flex-col justify-center p-6 bg-[#E6F7FF]">
+      <section className="justify-center p-8 sm:px-24">
         <div className="grid grid-cols-2">
-          <div className="w-full bg-teal-400 rounded-lg shadow md:max-w-md mx-auto">
+          <div className="bg-teal-300 flex flex-col max-w-md rounded-lg">
             <div className="p-6 space-y-4">
               <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-xl">
                 BMI Kalkulator
               </h1>
-              <form className="space-y-4 md:space-y-4">
+              <form className="space-y-3 md:space-y-4">
                 <div>
                   <p
                     className="block mb-2 text-sm font-medium text-gray-900"
@@ -181,20 +196,20 @@ function BmiCalculator() {
                   />
                 </div>
                 <div>
-                  <p
-                    className="block mb-2 text-sm font-medium text-gray-900"
-                    id="masukanUmur"
-                  >
-                    Usia anak (Tahun)
-                  </p>
-                  <input
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                    type="number"
-                    value={umurInput}
-                    onChange={(e) => setUmurInput(e.target.value)}
-                    placeholder="2"
+                  <h2>Tanggal Lahir:</h2>
+                  <DatePicker
+                    selected={selectedDate}
+                    onChange={handleDateChange}
+                    dateFormat="dd/MM/yyyy"
+                    peekNextMonth
+                    showMonthDropdown
+                    showYearDropdown
+                    dropdownMode="select"
+                    placeholderText="Pilih Tanggal"
+                    className="p-2 rounded-md"
                   />
                 </div>
+
                 <div>
                   <p
                     className="block mb-2 text-sm font-medium text-gray-900"
@@ -269,99 +284,80 @@ function BmiCalculator() {
                     Hitung
                   </button>
                 </div>
-                </form>
-                {result && (
-                  <div>
-                    <h4 className="mb-2 text-sm font-medium text-gray-900">
-                      Hasil:
-                    </h4>
-                    <ul className="list-disc pl-6">
-                      <li>Nama: {name}</li>
-                      <li>Umur: {umurInput}</li>
-                      <li>Jenis Kelamin: {jenisKelamin}</li>
-                      <li>BMI: {bmiResult}</li>
-                      <li>Kategori: {bmiCategory}</li>
-                    </ul>
-                  </div>
-                )}
-
-                {/* <div className="flex justify-center">
-                  <NavLink
-                    to="history"
-                    className="bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-                    id="historyBtn"
-                  >
-                    Lihat Riwayat BMI
-                  </NavLink>
-                </div> */}
-              
+              </form>
+            </div>
+            <div>
+              {result && (
+                <div className="p-4 bg-slate-300 mx-6 mb-6 rounded-xl">
+                  <h4 className="mb-2 text-sm font-medium text-gray-700">
+                    Hasil:
+                  </h4>
+                  <ul className="list-disc pl-6">
+                    <li>Nama: {name}</li>
+                    <li>Usia: {ageBaby}</li>
+                    <li>Jenis Kelamin: {jenisKelamin}</li>
+                    <li>BMI: {bmiResult}</li>
+                    <li>Kategori: {bmiCategory}</li>
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
-          <div className="bg-[#E6F7FF] flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-            <div className="w-full bg-blue-200 rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
-              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                <div className="flex items-center">
-                  <NavLink to="/bmi" className="text-gray-900">
-                    <AiOutlineArrowLeft className="mr-2" />
-                  </NavLink>
-                </div>
-                <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-2xl">
-                  Riwayat BMI
-                </h1>
-                {bmiHistory.length > 0 ? (
+          <div className="flex flex-col lg:py-0">
+            <div className="space-y-4">
+              <h1 className="text-lg font-bold text-center leading-tight tracking-tight md:text-xl">
+                Riwayat BMI
+              </h1>
+              {bmiHistory.length > 0 ? (
+                <div className="bg-gray-300 p-4 rounded-lg">
                   <table className="w-full border-collapse">
-                    <thead>
+                    <thead className="text-md text-left font-medium text-gray-900">
                       <tr>
-                        <th className="border-b border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-900">
-                          Nama
-                        </th>
-                        <th className="border-b border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-900">
-                          Umur
-                        </th>
-                        <th className="border-b border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-900">
-                          Jenis Kelamin
-                        </th>
-                        <th className="border-b border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-900">
-                          BMI
-                        </th>
-                        <th className="border-b border-gray-300 px-4 py-2 text-left text-sm font-medium text-gray-900">
+                        <th className="border-b border-gray-500 px-4">Nama</th>
+                        <th className="border-b border-gray-500 px-4">Umur</th>
+                        <th className="border-b border-gray-500 px-4">TB</th>
+                        <th className="border-b border-gray-500 px-4">BB</th>
+                        <th className="border-b border-gray-500 px-4">BMI</th>
+                        <th className="border-b border-gray-500 px-4">
                           Kategori
                         </th>
                       </tr>
                     </thead>
                     <tbody>
                       {bmiHistory.map((data) => (
-                        <tr key={data.id}>
-                          <td className="border-b border-gray-300 px-4 py-2 text-sm text-gray-900">
+                        <tr key={data.id} className="text-sm text-gray-900">
+                          <td className="border-b border-gray-500 px-4 py-2 ">
                             {data.name}
                           </td>
-                          <td className="border-b border-gray-300 px-4 py-2 text-sm text-gray-900">
+                          <td className="border-b border-gray-500 px-4 py-2">
                             {data.age}
                           </td>
-                          <td className="border-b border-gray-300 px-4 py-2 text-sm text-gray-900">
-                            {data.gender}
+                          <td className="border-b border-gray-500 px-4 py-2">
+                            {data.height}
                           </td>
-                          <td className="border-b border-gray-300 px-4 py-2 text-sm text-gray-900">
+                          <td className="border-b border-gray-500 px-4 py-2">
+                            {data.weight}
+                          </td>
+                          <td className="border-b border-gray-500 px-4 py-2">
                             {data.result}
                           </td>
-                          <td className="border-b border-gray-300 px-4 py-2 text-sm text-gray-900">
+                          <td className="border-b border-gray-500 px-4 py-2">
                             {data.category}
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                ) : (
-                  <p className="text-gray-900">
-                    Belum ada data BMI yang tersimpan.
-                  </p>
-                )}
-              </div>
+                </div>
+              ) : (
+                <p className="text-gray-900">
+                  Belum ada data BMI yang tersimpan.
+                </p>
+              )}
             </div>
           </div>
         </div>
       </section>
-      <Footer />
     </>
   );
 }
