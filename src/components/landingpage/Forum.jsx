@@ -23,7 +23,7 @@ const Forum = () => {
         {isLoading ? (
           <Loader />
         ) : (
-          forums.slice(0, 3).map((forum) => (
+          forums?.slice(0, 3).map((forum) => (
             <div key={forum.id} className="w-full mb-4 md:w-1/2 lg:w-1/3">
               <div className="box-lg bg-white m-4 p-4 w-auto text-center relative border-2 border-slate-400 shadow-md rounded-xl">
                 <FaQuoteRight className="absolute top-4 right-8 text-sm text-slate-600 opacity-10" />

@@ -1,5 +1,3 @@
-import '../style/landingpage.css';
-
 const About = () => {
   return (
     <>

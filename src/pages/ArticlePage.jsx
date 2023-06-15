@@ -6,10 +6,30 @@ import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Navbar from "../components/Navbar";
+import Breadcrumb from "../components/Breadcrumb";
+import { useState } from "react";
 import Footer from "../components/Footer";
 
 const ArticlePage = () => {
   const { articles, isLoading } = useContext(ArticleContext);
+  // eslint-disable-next-line no-unused-vars
+  const [showAll, setShowAll] = useState(false);
+  const [visibleArticles, setVisibleArticles] = useState(4);
+  const breadcrumbItems = [{ title: "Home", url: "/" }, { title: "Article" }];
+
+
+  const showMoreArticles = () => {
+    setVisibleArticles(visibleArticles + 4);
+  };
+
+  const filteredArticles = articles?.filter(
+    (article) => article.categori === "terbaru"
+  );
+
+  const displayedArticles = showAll
+    ? filteredArticles
+    : filteredArticles?.slice(0, visibleArticles);
+
   dayjs.extend(relativeTime);
   dayjs.locale("id");
 
@@ -19,69 +39,68 @@ const ArticlePage = () => {
 
   return (
     <>
-      <Navbar/>
-    <div className="justify-center p-8 sm:px-24">
-      <div>
-        <h1 className="text-2xl font-bold mb-8">Artikel Pilihan</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-          <div className="col-span-1">
-            {articles
-              ?.filter((article) => article.categori === "pilihan")
-              .slice(0, 1)
-              .map((article) => (
-                <div key={article.id} className="mb-5">
-                  <div className="max-w-3xl space-y-4">
-                    <div className="relative">
-                      <Link to={`/article/${article.id}`}>
-                        <img
-                          src={article.image}
-                          alt={`article pilihan ${article.id}`}
-                          className="rounded-lg"
-                        />
-                        <h2 className="absolute bottom-0 rounded-b-lg bg-gradient-to-t from-black bg-opacity-40 left-0 w-full px-4 py-4 text-white text-lg font-semibold sm:text-2xl">
-                          {article.title}
-                        </h2>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ))}
-          </div>
-          <div className="changeArticle overflow-y-auto overflow-x-hidden">
-            <div className="">
+      <Navbar />
+      <div className="justify-center p-8 sm:px-24">
+        <Breadcrumb items={breadcrumbItems} />
+        <div>
+          <h1 className="text-2xl font-bold mb-8">Artikel Pilihan</h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+            <div className="col-span-1">
               {articles
                 ?.filter((article) => article.categori === "pilihan")
+                .slice(0, 1)
                 .map((article) => (
-                  <div key={article.id} className="mb-4">
-                    <Link to={`/article/${article.id}`}>
-                      <div className="max-w-xl flex gap-3">
-                        <img
-                          src={article.image}
-                          alt={`article pilihan ${article.id}`}
-                          className="max-w-lg w-36 rounded-lg"
-                        />
-                        <div>
-                          <h2 className="text-lg font-medium">
+                  <div key={article.id} className="mb-5">
+                    <div className="max-w-3xl space-y-4">
+                      <div className="relative">
+                        <Link to={`/article/${article.id}`}>
+                          <img
+                            src={article.image}
+                            alt={`article pilihan ${article.id}`}
+                            className="rounded-lg"
+                          />
+                          <h2 className="absolute bottom-0 rounded-b-lg bg-gradient-to-t from-black bg-opacity-40 left-0 w-full px-4 py-4 text-white text-lg font-semibold sm:text-2xl">
                             {article.title}
                           </h2>
-                          <span className="text-md text-slate-500">
-                            {dayjs(article.createdAt).fromNow()}
-                          </span>
-                        </div>
+                        </Link>
                       </div>
-                    </Link>
+                    </div>
                   </div>
                 ))}
             </div>
+            <div className="changeArticle overflow-y-auto overflow-x-hidden">
+              <div className="">
+                {articles
+                  ?.filter((article) => article.categori === "pilihan")
+                  .map((article) => (
+                    <div key={article.id} className="mb-4">
+                      <Link to={`/article/${article.id}`}>
+                        <div className="max-w-xl flex gap-3">
+                          <img
+                            src={article.image}
+                            alt={`article pilihan ${article.id}`}
+                            className="max-w-lg w-36 rounded-lg"
+                          />
+                          <div>
+                            <h2 className="text-lg font-medium">
+                              {article.title}
+                            </h2>
+                            <span className="text-md text-slate-500">
+                              {dayjs(article.createdAt).fromNow()}
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  ))}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div>
-        <h1 className="text-2xl font-bold mb-8 mt-12">Artikel Terbaru</h1>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-4">
-          {articles
-            ?.filter((article) => article.categori === "terbaru")
-            .map((article) => (
+        <div>
+          <h1 className="text-2xl font-bold mb-8 mt-12">Artikel Terbaru</h1>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-4">
+            {displayedArticles.map((article) => (
               <div
                 key={article.id}
                 className="max-w-md border-slate-300 border-2 rounded-lg gap-3 shadow-lg"
@@ -102,11 +121,19 @@ const ArticlePage = () => {
                 </Link>
               </div>
             ))}
+          </div>
+          {!showAll && filteredArticles.length > visibleArticles && (
+            <button
+              className="bg-teal-500 hover:bg-teal-400 text-white font-bold py-2 px-4 rounded mt-4 float-right"
+              onClick={showMoreArticles}
+            >
+              Tampilkan Lebih Banyak
+            </button>
+          )}
         </div>
       </div>
-      </div>
-      <Footer/>
-      </>
+      <Footer />
+    </>
   );
 };
 

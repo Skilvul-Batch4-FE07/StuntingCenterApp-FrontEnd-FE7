@@ -3,18 +3,19 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import { logout } from "../features/authSlice";
 import "../styles/index.css";
-import { AiFillHome, AiFillFileText, AiFillCalculator, AiFillMessage } from "react-icons/ai";
-import { MenuIcon, XIcon } from '@heroicons/react/solid';
-import NavLogo from '../assets/img/logo_new2.png';
-import { getCurrentUser, clearCurrentUser } from "../utils/localStorage";
-import { getUserFromApi } from '../utils/api';
-import { login } from '../features/authSlice';
+import {
+  AiFillHome,
+  AiFillFileText,
+  AiFillCalculator,
+  AiFillMessage,
+} from "react-icons/ai";
+import { logout, loadUser, login } from "../features/authSlice";
+import { clearCurrentUser, getCurrentUser } from "../utils/localStorage";
+import { getUserFromApi } from "../utils/api";
 
-const Navbar = () => {
+const NavbarPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [userName, setUserName] = useState("");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const user = useSelector((state) => state.auth.userProfile);
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -63,25 +64,33 @@ const Navbar = () => {
   };
 
   return (
-    <header className="border-b border-gray-300 sticky top-0 z-50 bg-white py-2">
+    <header className="sticky top-0 z-50 py-2 bg-white shadow-md">
       <div className="flex justify-between items-center xl:max-w-7xl xl:mx-auto max-w-full flex-wrap px-4">
-        <NavLink to="/" className="cursor-pointer">
-          <img src={NavLogo} alt="Logo" className="w-16 sm:w-20" />
+        <NavLink to="/home" className="cursor-pointer">
+          <img
+            src={"https://i.postimg.cc/d3QWvCGR/logo-new1.png"}
+            alt="Logo"
+            className="sm:w-12 w-12"
+          />
         </NavLink>
         <div className="lg:hidden">
           <button
-            className="flex items-center px-3 py-2 border rounded text-gray-500 border-gray-600 hover:text-blue-500 hover:border-blue-500"
             onClick={toggleMobileMenu}
+            className="block text-white focus:outline-none"
           >
-            <svg
-              className="h-4 w-4 fill-current"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg className="h-6 w-6" viewBox="0 0 24 24">
               {isMobileMenuOpen ? (
-                <XIcon className="h-6 w-6" />
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M4 6h16v1H4V6zm0 6h16v-1H4v1zm16 4H4v1h16v-1z"
+                />
               ) : (
-                <MenuIcon className="h-6 w-6" />
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M4 5h16v1H4V5zm0 6h16v1H4v-1zm0 6h16v1H4v-1z"
+                />
               )}
             </svg>
           </button>
@@ -184,4 +193,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavbarPage;

@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { registerUser } from '../features/authSlice';
-import { saveUserToApi, getUserFromApi } from '../utils/api';
-import { Envelope, PersonCircle, LockFill } from 'react-bootstrap-icons';
-import { Eye, EyeSlash } from 'react-bootstrap-icons';
-import imgSide from '../assets/img/icon_bg.png';
-import imgBg from '../assets/bg-logreg.svg';
-import { NavLink, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../features/authSlice";
+import { saveUserToApi, getUserFromApi } from "../utils/api";
+import { Envelope, PersonCircle, LockFill } from "react-bootstrap-icons";
+import { Eye, EyeSlash } from "react-bootstrap-icons";
+import imgSide from "../assets/img/icon_bg.png";
+import imgBg from "../assets/bg-logreg.svg";
+import { NavLink, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const RegisterForm = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleRegisterSuccess = () => {
-    navigate('/login');
+    navigate("/login");
   };
 
   const handleRegister = async (e) => {
