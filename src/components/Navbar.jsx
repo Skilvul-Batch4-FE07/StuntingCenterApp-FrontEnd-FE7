@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
-import { logout ,login} from "../features/authSlice";
+import { logout, login } from "../features/authSlice";
 import "../styles/index.css";
 import {
   AiFillHome,
@@ -28,7 +28,7 @@ const Navbar = () => {
     } else if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUserName(parsedUser.name);
-      dispatch(login(parsedUser)); 
+      dispatch(login(parsedUser));
     }
   }, [user, dispatch]);
 
@@ -38,22 +38,22 @@ const Navbar = () => {
       getUserFromApi(currentUserId)
         .then((user) => {
           if (user) {
-            dispatch(login(user)); 
+            dispatch(login(user));
             setUserName(user.name);
             localStorage.setItem("loggedInUser", JSON.stringify(user));
           }
         })
         .catch((error) => {
-          console.log('Terjadi kesalahan:', error);
+          console.log("Terjadi kesalahan:", error);
         });
     }
   }, [dispatch]);
 
   const handleLogout = () => {
     dispatch(logout());
-    localStorage.removeItem('loggedInUser');
+    localStorage.removeItem("loggedInUser");
     clearCurrentUser();
-    navigate('/');
+    navigate("/");
   };
 
   const toggleDropdown = () => {
@@ -98,20 +98,15 @@ const Navbar = () => {
         </div>
         <div>
           <nav
-            className={`${isMobileMenuOpen ? "block" : "hidden"
-              } lg:flex lg:items-center lg:w-auto w-full`}
+            className={`${
+              isMobileMenuOpen ? "block" : "hidden"
+            } lg:flex lg:items-center lg:w-auto w-full`}
           >
             <ul className="text-base text-gray-200 flex flex-col lg:flex-row items-center lg:justify-end lg:gap-8 space-x-3">
               <li className="hover:text-teal-400 font-semibold text-md text-gray-500">
                 <button className="flex gap-2 items-center">
-                  <NavLink to="/">
-                    {({ isActive }) => (
-                      <>
-                        <AiFillHome className={`menu text-lg ${isActive ? "active" : ""}`} />
-                        <span className={isActive ? "active" : ""}>Home</span>
-                      </>
-                    )}
-                  </NavLink>
+                  <AiFillHome className="menu text-lg" />
+                  <NavLink to="/">Home</NavLink>
                 </button>
               </li>
               <li className="hover:text-teal-400 font-semibold text-md text-gray-500">
@@ -137,7 +132,7 @@ const Navbar = () => {
         </div>
         <div>
           {user && (
-            <div className="lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6">
+            <div className="lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6 bg-black rounded-full">
               <div
                 className="flex items-center cursor-pointer hover:text-primary"
                 onClick={toggleDropdown}
