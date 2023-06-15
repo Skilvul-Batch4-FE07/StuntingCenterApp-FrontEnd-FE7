@@ -45,7 +45,7 @@ function BmiCalculator() {
     } else if (userProfile) {
       setName(userProfile.name);
     } else {
-      navigate("/login"); // Redirect to login page if userProfile.name is empty
+      navigate("/login");
     }
   }, [dispatch, navigate, userProfile]);
 

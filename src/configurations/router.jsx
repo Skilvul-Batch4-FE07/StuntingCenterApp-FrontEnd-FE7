@@ -25,11 +25,11 @@ const RouterComponent = () => {
         <Route path='/article' element={<ArticlePage />} />
         <Route path="/article/:id" element={<ArticleDetail />} />        
         <Route path='/profile' element={<ProfilePage />} />
+        <Route path='/' element={<Navigate to='/home' />} />
         <Route path='/forum' element= {<ForumPage/>} />
         <Route path='/bmi' element= {<BmiPage/>} />
         <Route path="/forum/:id" element={<DetailDiskusi />} />
         <Route path="/bmi/history" element={<HistoryBmi/>} />
-
       </Routes>
     </Router>
   );
