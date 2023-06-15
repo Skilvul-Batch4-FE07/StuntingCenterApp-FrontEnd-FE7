@@ -1,5 +1,3 @@
-// authSlice.js
-
 import { createSlice } from '@reduxjs/toolkit';
 import { getUsers, createUser } from '../utils/api';
 import {
@@ -68,7 +66,6 @@ export const loginUser = (credentials) => async (dispatch) => {
   }
 };
 
-
 export const registerUser = (user) => async (dispatch) => {
   try {
     dispatch(registerRequest());
@@ -121,31 +118,6 @@ const authSlice = createSlice({
     },
     updateUserProfile: (state, action) => {
       state.userProfile = action.payload;
-    },
-    loginRequest: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    loginSuccess: (state, action) => {
-      state.user = action.payload;
-      state.loading = false;
-      state.error = null;
-    },
-    loginFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    registerRequest: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    registerSuccess: (state) => {
-      state.loading = false;
-      state.error = null;
-    },
-    registerFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
     },
   },
 });

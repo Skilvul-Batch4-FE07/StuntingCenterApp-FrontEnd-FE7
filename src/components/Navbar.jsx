@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
-import { logout} from "../features/authSlice";
+import { logout } from "../features/authSlice";
 import "../styles/index.css";
 import { AiFillHome, AiFillFileText, AiFillCalculator, AiFillMessage } from "react-icons/ai";
 import { MenuIcon, XIcon } from '@heroicons/react/solid';
@@ -17,27 +17,28 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const user = useSelector((state) => state.auth.userProfile);
   const [showDropdown, setShowDropdown] = useState(false);
-  
+
   useEffect(() => {
+    const storedUser = localStorage.getItem("loggedInUser");
     if (user) {
       setUserName(user.name);
-      localStorage.setItem("loggedInUser", user.name);
-    } else {
-      const storedUserName = getCurrentUser();
-      if (storedUserName) {
-        setUserName(storedUserName);
-      }
+      localStorage.setItem("loggedInUser", JSON.stringify(user));
+    } else if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUserName(parsedUser.name);
+      dispatch(login(parsedUser)); 
     }
-  }, [user]);
+  }, [user, dispatch]);
 
-    useEffect(() => {
+  useEffect(() => {
     const currentUserId = getCurrentUser();
     if (currentUserId) {
-      // Fetch data user dari mockAPI menggunakan currentUserId
       getUserFromApi(currentUserId)
         .then((user) => {
           if (user) {
-            dispatch(login(user));
+            dispatch(login(user)); 
+            setUserName(user.name);
+            localStorage.setItem("loggedInUser", JSON.stringify(user));
           }
         })
         .catch((error) => {
@@ -46,12 +47,12 @@ const Navbar = () => {
     }
   }, [dispatch]);
 
-const handleLogout = () => {
-  dispatch(logout());
-  localStorage.removeItem('loggedInUser');
-  clearCurrentUser();
-  navigate('/home');
-};
+  const handleLogout = () => {
+    dispatch(logout());
+    localStorage.removeItem('loggedInUser');
+    clearCurrentUser();
+    navigate('/');
+  };
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -60,7 +61,6 @@ const handleLogout = () => {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
-
 
   return (
     <header className="border-b border-gray-300 sticky top-0 z-50 bg-white py-2">
@@ -95,7 +95,7 @@ const handleLogout = () => {
               <li className="hover:text-teal-400 font-semibold text-md text-gray-500">
                 <button className="flex gap-2 items-center">
                   <NavLink to="/">
-                    {({ isActive}) => (
+                    {({ isActive }) => (
                       <>
                         <AiFillHome className={`menu text-lg ${isActive ? "active" : ""}`} />
                         <span className={isActive ? "active" : ""}>Home</span>

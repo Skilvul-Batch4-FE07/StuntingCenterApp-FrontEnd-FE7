@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, logout } from '../features/authSlice';
+import { login } from '../features/authSlice';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import imgSide from '../assets/img/icon_bg.png';
@@ -8,7 +8,7 @@ import imgBg from '../assets/bg-logreg.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { PersonCircle, Eye, EyeSlash, LockFill } from 'react-bootstrap-icons';
 import { getUserFromApi } from '../utils/api';
-import { setCurrentUser, getCurrentUser, clearCurrentUser } from '../utils/localStorage';
+import { setCurrentUser, getCurrentUser} from '../utils/localStorage';
 const MySwal = withReactContent(Swal);
 
 const LoginForm = () => {
@@ -36,25 +36,26 @@ const LoginForm = () => {
   }, [dispatch]);
 
   const handleLoginSuccess = (user) => {
-    setEmail('');
-    setPassword('');
-    MySwal.fire({
-      icon: 'success',
-      title: 'Login Successful',
-      showConfirmButton: false,
-      timer: 1500
-    }).then(() => {
-      localStorage.setItem('loggedInUser', user.name);
-      setCurrentUser(user.id);
-      dispatch(login(user));
-      navigate('/home');
-    });
-  };
+  setEmail('');
+  setPassword('');
+  MySwal.fire({
+    icon: 'success',
+    title: 'Login Successful',
+    showConfirmButton: false,
+    timer: 1500
+  }).then(() => {
+    // Simpan data user sebagai string JSON di local storage
+    const userData = JSON.stringify(user);
+    localStorage.setItem('loggedInUser', userData);
+    setCurrentUser(user.id);
+    dispatch(login(user));
+    navigate('/');
+  });
+};
 
 
   const handleLogin = (event) => {
     event.preventDefault();
-
     getUserFromApi(email, password)
       .then((user) => {
         if (user) {
