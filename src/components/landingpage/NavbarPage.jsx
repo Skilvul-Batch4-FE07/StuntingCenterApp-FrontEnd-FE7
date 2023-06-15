@@ -2,33 +2,53 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import "../../styles/index.css";
-// import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import {
   AiFillHome,
   AiFillFileText,
   AiFillCalculator,
   AiFillMessage,
 } from "react-icons/ai";
-import { logout, loadUser } from "../../features/authSlice";
+import { clearCurrentUser, getCurrentUser } from "../../utils/localStorage";
+import { getUserFromApi } from "../../utils/api";
+import { login, logout } from "../../features/authSlice";
 
-const NavbarPage = () => {
+const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.userProfile);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [userName, setUserName] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [userName, setUserName] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    dispatch(loadUser());
-  }, [dispatch]);
-
-  useEffect(() => {
+    const storedUser = localStorage.getItem("loggedInUser");
     if (user) {
       setUserName(user.name);
+      localStorage.setItem("loggedInUser", JSON.stringify(user));
+    } else if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUserName(parsedUser.name);
+      dispatch(login(parsedUser));
     }
-  }, [user]);
+  }, [user, dispatch]);
+
+  useEffect(() => {
+    const currentUserId = getCurrentUser();
+    if (currentUserId) {
+      getUserFromApi(currentUserId)
+        .then((user) => {
+          if (user) {
+            dispatch(login(user));
+            setUserName(user.name);
+            localStorage.setItem("loggedInUser", JSON.stringify(user));
+          }
+        })
+        .catch((error) => {
+          console.log("Terjadi kesalahan:", error);
+        });
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,7 +65,9 @@ const NavbarPage = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate("/home");
+    localStorage.removeItem("loggedInUser");
+    clearCurrentUser();
+    navigate("/");
   };
 
   const toggleDropdown = () => {
@@ -92,54 +114,56 @@ const NavbarPage = () => {
             </svg>
           </button>
         </div>
-        <nav
-          className={`${
-            isMobileMenuOpen ? "block justify-start" : "hidden"
-          } lg:flex lg:items-center lg:w-auto w-full`}
-        >
-          <ul className="text-base text-gray-200 flex flex-col lg:flex-row items-center lg:justify-end lg:gap-8 space-x-3">
-            <li
-              className={`hover:text-teal-400 font-semibold text-md ${
-                isScrolled ? "text-gray-500" : ""
-              }`}
-            >
-              <button className="flex gap-2 items-center">
-                <AiFillHome className="text-lg" />
-                <NavLink to="/">Home</NavLink>
-              </button>
-            </li>
-            <li
-              className={`hover:text-teal-400 font-semibold text-md ${
-                isScrolled ? "text-gray-500" : ""
-              }`}
-            >
-              <button className="flex items-center gap-2">
-                <AiFillFileText className="text-lg" />
-                <NavLink to="/article">Artikel</NavLink>
-              </button>
-            </li>
-            <li
-              className={`hover:text-teal-400 font-semibold text-md ${
-                isScrolled ? "text-gray-500" : ""
-              }`}
-            >
-              <button className="flex items-center gap-2">
-                <AiFillCalculator className="text-lg" />
-                <NavLink to="/bmi">BMI</NavLink>
-              </button>
-            </li>
-            <li
-              className={`hover:text-teal-400 font-semibold text-md ${
-                isScrolled ? "text-gray-500" : ""
-              }`}
-            >
-              <button className="flex items-center gap-2">
-                <AiFillMessage className="text-lg" />
-                <NavLink to="/forum">Forum Diskusi</NavLink>
-              </button>
-            </li>
-          </ul>
-        </nav>
+        <div>
+          <nav
+            className={`${
+              isMobileMenuOpen ? "block justify-start" : "hidden"
+            } lg:flex lg:items-center lg:w-auto w-full`}
+          >
+            <ul className="text-base text-gray-200 flex flex-col lg:flex-row items-center lg:justify-end lg:gap-8 space-x-3">
+              <li
+                className={`hover:text-teal-400 font-semibold text-md ${
+                  isScrolled ? "text-gray-500" : ""
+                }`}
+              >
+                <button className="flex gap-2 items-center">
+                  <AiFillHome className="menu text-lg" />
+                  <NavLink to="/">Home</NavLink>
+                </button>
+              </li>
+              <li
+                className={`hover:text-teal-400 font-semibold text-md ${
+                  isScrolled ? "text-gray-500" : ""
+                }`}
+              >
+                <button className="flex items-center gap-2">
+                  <AiFillFileText className="menu text-lg" />
+                  <NavLink to="/article">Artikel</NavLink>
+                </button>
+              </li>
+              <li
+                className={`hover:text-teal-400 font-semibold text-md ${
+                  isScrolled ? "text-gray-500" : ""
+                }`}
+              >
+                <button className="flex items-center gap-2">
+                  <AiFillCalculator className="menu text-lg" />
+                  <NavLink to="/bmi">BMI</NavLink>
+                </button>
+              </li>
+              <li
+                className={`hover:text-teal-400 font-semibold text-md ${
+                  isScrolled ? "text-gray-500" : ""
+                }`}
+              >
+                <button className="flex items-center gap-2">
+                  <AiFillMessage className="text-lg" />
+                  <NavLink to="/forum">Forum Diskusi</NavLink>
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
         <div className={`${
             isMobileMenuOpen ? "relative" : "hidden"
           } lg:flex lg:items-center lg:w-auto w-full`}>
@@ -201,4 +225,4 @@ const NavbarPage = () => {
   );
 };
 
-export default NavbarPage;
+export default Navbar;
