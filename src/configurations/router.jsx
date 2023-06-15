@@ -1,7 +1,8 @@
 import {
   BrowserRouter as Router,
   Route,
-  Routes
+  Routes,
+  Navigate
 } from 'react-router-dom'
 import Login from '../pages/LoginPage'
 import Register from '../pages/RegisterPage'
@@ -24,6 +25,7 @@ const RouterComponent = () => {
         <Route path='/article' element={<ArticlePage />} />
         <Route path="/article/:id" element={<ArticleDetail />} />        
         <Route path='/profile' element={<ProfilePage />} />
+        <Route path='/' element={<Navigate to='/home' />} />
         <Route path='/forum' element= {<ForumPage/>} />
         <Route path='/bmi' element= {<BmiPage/>} />
         <Route path="/forum/:id" element={<DetailDiskusi />} />
