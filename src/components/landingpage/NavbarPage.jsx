@@ -10,6 +10,7 @@ import {
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useEffect } from "react";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -18,7 +19,19 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const handleLogout = () => {
-    logout();
+    Swal.fire({
+      title: "Konfirmasi Logout?",
+      text: "Apakah anda yakin akan logout?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+      }
+    });
   };
 
   const toggleDropdown = () => {

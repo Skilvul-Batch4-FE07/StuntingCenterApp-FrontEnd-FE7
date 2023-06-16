@@ -1,7 +1,7 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { Loader } from "../components/Loader";
 import { BiComment, BiLike } from "react-icons/bi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -13,7 +13,7 @@ import Footer from "../components/Footer";
 
 function ForumDiskusiPage() {
   const {currentUser} = useContext(AuthContext);
-  const { forums, isLoading, handlePostDiscussion , handleDeleteDiscussion} = useContext(ForumContext);
+  const { forums, isLoading, handlePostDiscussion } = useContext(ForumContext);
 
   const [newDiscussion, setNewDiscussion] = useState({
     title: "",
@@ -56,10 +56,6 @@ function ForumDiskusiPage() {
             <form onSubmit={handleSubmitDiscussion} className="space-y-4">
               <input
                 type="text"
-                value={newDiscussion.title}
-                onChange={(e) =>
-                  setNewDiscussion({ ...newDiscussion, title: e.target.value })
-                }
                 placeholder="Judul Diskusi"
                 className="border-2 border-gray-300 rounded-md p-2 w-full"
               />

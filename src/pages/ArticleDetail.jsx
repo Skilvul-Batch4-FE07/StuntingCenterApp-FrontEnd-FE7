@@ -51,7 +51,7 @@ function ArticleDetail() {
       <Navbar />
       <div className="flex flex-col items-center gap-10 py-2 sm:py-10">
         <div className="sm:space-x-24">
-          <div className="fixed items-center bg-white p-2 rounded-md shadow-md shadow-slate-300 my-auto sm:bg-transparent sm:shadow-none">
+          <div className="fixed bottom-20 md:fixed md:bottom-auto float-right items-center bg-white p-2 rounded-md shadow-md shadow-slate-300 my-auto sm:bg-transparent sm:shadow-none">
             <div className="flex flex-col space-y-4">
               <FacebookShareButton url="{window.location.href}">
                 <FacebookIcon size={36} round />
