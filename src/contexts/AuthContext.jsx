@@ -1,62 +1,96 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { loginUser, registerUser } from '../utils/api';
+import axios from "axios";
+import { createContext } from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 
-const AuthContext = createContext();
+const MOCKAPI_USERS_URL =
+  "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/users";
 
-const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+export const AuthContext = createContext();
 
-  // Cek localStorage saat komponen dipasang
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
+// eslint-disable-next-line react/prop-types
+export const AuthProvider = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState();
+  const [checkingUser, setCheckingUser] = useState(true);
 
-  // Login user
   const login = async (email, password) => {
     try {
-      const response = await loginUser(email, password);
-      const userData = {
-        email: response.data.email,
-        token: response.data.token,
-      };
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
+      const response = await axios.get(MOCKAPI_USERS_URL);
+      const foundedUser = response.data.find(
+        (user) => user.email === email && user.password === password
+      );
+
+      if (!foundedUser) {
+        return false;
+      }
+
+      localStorage.setItem("user", JSON.stringify(foundedUser));
+      setCurrentUser(foundedUser);
+      return true;
     } catch (error) {
-      console.error('Login error:', error);
+      console.error(error);
+      return false;
     }
   };
 
-  // Registrasi user
-  const register = async (email, password) => {
+  const logout = async () => {
     try {
-      const response = await registerUser(email, password);
-      const userData = {
-        email: response.data.email,
-        token: response.data.token,
-      };
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.removeItem("user");
+      setCurrentUser(null);
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error(error);
     }
   };
 
-  // Logout user
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
+  const register = async (username, email, password) => {
+    try {
+      const response = await axios.get(MOCKAPI_USERS_URL);
+      const foundedUser = response.data.find((user) => user.email === email);
+
+      if (foundedUser) {
+        alert("Email sudah dipakai");
+        return false;
+      }
+
+      // Harus sama dengan yang ada di mockapi bentuknya
+      const newUser = {
+        email,
+        password,
+        username,
+      };
+
+      const newUserResponse = await axios.post(MOCKAPI_USERS_URL, newUser);
+
+      if (!newUserResponse) {
+        alert("Terjadi kesalahan");
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
   };
+
+
+  const isLoggedIn = Boolean(currentUser);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      setCurrentUser(JSON.parse(user));
+    }
+    setCheckingUser(false);
+  }, []);
 
   return (
-    <AuthContext.Provider
-      value={{ user, login, register, logout }}
-    >
-      {children}
-    </AuthContext.Provider>
+    <>
+      <AuthContext.Provider
+        value={{ currentUser, isLoggedIn, register, login, logout }}
+      >
+        {!checkingUser && children}
+      </AuthContext.Provider>
+    </>
   );
 };
-
-export { AuthContext, AuthProvider };

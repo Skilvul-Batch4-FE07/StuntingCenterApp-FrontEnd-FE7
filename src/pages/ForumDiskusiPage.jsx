@@ -14,9 +14,7 @@ import { loadUser } from "../features/authSlice";
 
 function ForumDiskusiPage() {
   const dispatch = useDispatch();
-  const { forums, isLoading, commentData, handlePostDiscussion } =
-    useContext(ForumContext);
-  // const userProfile = useSelector((state) => state.auth.userProfile);
+  const { forums, isLoading, handlePostDiscussion } = useContext(ForumContext);
   const [name, setName] = useState("");
   const navigate = useNavigate();
 
@@ -27,14 +25,13 @@ function ForumDiskusiPage() {
     } else if (forums.userProfile) {
       setName(forums.userProfile.name);
     } else {
-      navigate("/login"); // Redirect to login page if userProfile.name is empty
+      navigate("/login");
     }
   }, [dispatch, navigate, forums.userProfile]);
 
   const [newDiscussion, setNewDiscussion] = useState({
     title: "",
     postContent: "",
-    createdAt: Date.now(),
   });
 
   dayjs.extend(relativeTime);
@@ -52,7 +49,7 @@ function ForumDiskusiPage() {
       title: newDiscussion.title,
       postContent: newDiscussion.postContent,
       createdAt: Date.now(),
-      name: name,
+      name: currentUser,
     };
     handlePostDiscussion(discussion);
     setNewDiscussion({ title: "", postContent: "" });
@@ -91,7 +88,7 @@ function ForumDiskusiPage() {
               />
               <button
                 type="submit"
-                className=" bg-teal-500 text-white py-1 px-4 mt-2 rounded-md float-right"
+                className="bg-teal-500 text-white py-1 px-4 mt-2 rounded-md float-right"
               >
                 Post Discussion
               </button>
@@ -130,29 +127,6 @@ function ForumDiskusiPage() {
                       <BiComment />{" "}
                       {forum.replies.length > 0 ? forum.replies.length : ""}
                     </Link>
-                    <div className="ml-6 border-gray-300 space-y-4">
-                      {commentData[forum.id] &&
-                        commentData[forum.id].map((reply) => (
-                          <div
-                            key={reply.id}
-                            className="flex items-center gap-4"
-                          >
-                            <img
-                              src={reply.userProfile}
-                              alt={`user profile ${reply.id}`}
-                              className="rounded-full w-8"
-                            />
-                            <div className="bg-gray-300 rounded-md py-2 pl-2 pr-6">
-                              <p className="font-medium text-md">
-                                {reply.name}
-                              </p>
-                              <p className="font-regular">
-                                {reply.contentReply}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
                   </div>
                 </div>
               </div>

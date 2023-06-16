@@ -2,7 +2,6 @@ import { useContext, useState, useEffect } from "react";
 import { ForumContext } from "../contexts/ForumContext";
 import { BiComment, BiLike } from "react-icons/bi";
 import CommentForm from "../components/CommentForm";
-import { Loader } from "../components/Loader";
 import { useParams } from "react-router-dom";
 import { AiOutlineWechat } from "react-icons/ai";
 import { BsChevronLeft } from "react-icons/bs";
@@ -11,32 +10,28 @@ import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Navbar from "../components/Navbar";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Footer from "../components/Footer";
-import {
-  getCurrentUser
-} from "../utils/localStorage";
+import { getCurrentUser } from "../utils/localStorage";
 import { loadUser } from "../features/authSlice";
-
 
 function DetailDiskusi() {
   const dispatch = useDispatch();
-  const { forums, isLoading, handlePostComment } = useContext(ForumContext);
-  const [newComment, setNewComment] = useState("");
+  const { forums, handlePostComment } = useContext(ForumContext);
   const { id } = useParams();
-  const [isCommentUpdating, setCommentUpdating] = useState(false);
-  const userProfile = useSelector((state) => state.auth.userProfile);
-    const [name, setName] = useState('');
+  const userProfiles = useSelector((state) => state.auth.userProfile);
+  const [name, setName] = useState(userProfiles?.name || "");
+  const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
     const currentUser = getCurrentUser();
-    if (!userProfile && currentUser) {
+    if (!userProfiles && currentUser) {
       dispatch(loadUser());
-    } else if (userProfile) {
-      setName(userProfile.name);
+    } else if (userProfiles) {
+      setName(userProfiles.name);
     }
-  }, [dispatch, userProfile]);
-  
+  }, [dispatch, userProfiles]);
+
   dayjs.extend(relativeTime);
   dayjs.locale("id");
   const goBack = () => {
@@ -50,41 +45,20 @@ function DetailDiskusi() {
     });
   };
 
-  const handleSubmitComment = async (forumId) => {
+  const handleSubmitComment = (forumId) => {
     if (newComment.trim() === "") return;
 
-    const updatedForum = { ...forum };
-    const newReply = {
-      id: Date.now().toString(),
-      name: name || "",
-      contentReply: newComment,
-      userProfile: userProfile?.profileUrl || "",
-      createdAt: new Date().toISOString(),
-    };
-
-    updatedForum.replies.push(newReply);
-
-    const updatedForums = [...forums];
-    const forumIndex = updatedForums.findIndex((f) => f.id === forumId);
-    updatedForums[forumIndex] = updatedForum;
-
-    setCommentUpdating(true);
-    await handlePostComment(forum.id, newComment); // Tunggu hingga pembaruan komentar selesai
-    setCommentUpdating(false);
+    handlePostComment(forumId, newComment);
     setNewComment("");
   };
 
   const forum = forums.find((forum) => forum.id === id);
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
   return (
     <>
       <Navbar />
       <div className="">
-        <div className=" sm:max-w-2xl w-full px-4 justify-center mx-auto mt-10">
+        <div className="sm:max-w-2xl w-full px-4 justify-center mx-auto mt-10">
           <div className="flex justify-between mb-4">
             <button>
               <BsChevronLeft className="text-xl" onClick={goBack} />
@@ -94,7 +68,7 @@ function DetailDiskusi() {
               <IoShareSocialOutline className="text-xl" onClick={sharePost} />
             </button>
           </div>
-          {forums ? (
+          {forum ? (
             <div key={forum.id} className="mb-8">
               <div className="max-w-2xl border-2 border-slate-200 rounded-lg shadow-lg p-4 space-y-4">
                 <div className="flex gap-4 items-center">
@@ -124,7 +98,7 @@ function DetailDiskusi() {
                     {forum.replies.length > 0 ? forum.replies.length : ""}
                   </button>
                 </div>
-                <div className="commentDetail overflow-y-auto overflow-x-hidden mt-8">
+                <div>
                   {forum.replies.length > 0 ? (
                     <ul className="space-y-4">
                       <h2 className="font-medium text-md">
@@ -142,9 +116,7 @@ function DetailDiskusi() {
                               className="rounded-full w-12"
                             />
                             <div>
-                              <p className="font-semibold text-md">
-                                {name}
-                              </p>
+                              <p className="font-semibold text-md">{name}</p>
                               <span className="text-sm text-slate-600">
                                 {dayjs(reply.createdAt).fromNow()}
                               </span>

@@ -1,61 +1,30 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
-import { loadUser } from "../features/authSlice";
-import { useNavigate } from "react-router-dom";
-import { getCurrentUser } from "../utils/localStorage";
-import Swal from "sweetalert2";
+import { useContext, useState } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import { BMIContext } from "../contexts/BmiContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-function BmiCalculator() {
-  const [bmiHistory, setBmiHistory] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [namaInput, setNamaInput] = useState("");
+export const BmiCalculator = () => {
+  const { currentUser } = useContext(AuthContext);
   const [ageBaby, setAgeBaby] = useState("");
-  const [tinggiInput, setTinggiInput] = useState("");
-  const [beratInput, setBeratInput] = useState("");
+  const [selectedDate, setSelectedDate] = useState(null);
   const [jenisKelamin, setJenisKelamin] = useState();
-  const [result, setResult] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const { bmiList, addBMIEntry } = useContext(BMIContext);
   const [tinggiError, setTinggiError] = useState("");
   const [beratError, setBeratError] = useState("");
-  const dispatch = useDispatch();
-  const userProfile = useSelector((state) => state.auth.userProfile);
-  const [name, setName] = useState("");
-  const [bmiResult, setBmiResult] = useState(0);
+  const [result, setResult] = useState("");
   const [bmiCategory, setBmiCategory] = useState("");
-  const navigate = useNavigate();
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  useEffect(() => {
-    axios
-      .get("https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/bmi")
-      .then((response) => {
-        setBmiHistory(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  useEffect(() => {
-    const currentUser = getCurrentUser();
-    if (!userProfile && currentUser) {
-      dispatch(loadUser());
-    } else if (userProfile) {
-      setName(userProfile.name);
-    } else {
-      navigate("/login");
-    }
-  }, [dispatch, navigate, userProfile]);
-
   const calculateBMI = () => {
     event.preventDefault();
-    const tinggiNum = parseInt(tinggiInput);
-    const beratNum = parseInt(beratInput);
+    const tinggiNum = parseInt(height);
+    const beratNum = parseInt(weight);
 
     if (isNaN(tinggiNum) || tinggiNum <= 0) {
       setTinggiError("Mohon isi data dengan angka");
@@ -70,17 +39,17 @@ function BmiCalculator() {
     }
 
     if (tinggiNum > 0 && beratNum > 0) {
-      const bmiResult = (
+      const result = (
         beratNum /
         (((tinggiNum / 100) * tinggiNum) / 100)
       ).toFixed(2);
 
       let bmiCategory = "";
-      if (bmiResult <= 18.4) {
+      if (result <= 18.4) {
         bmiCategory = "Underweight";
-      } else if (bmiResult >= 18.6 && bmiResult < 24.9) {
+      } else if (result >= 18.6 && result < 24.9) {
         bmiCategory = "Normal";
-      } else if (bmiResult >= 25 && bmiResult < 29.9) {
+      } else if (result >= 25 && result < 29.9) {
         bmiCategory = "Overweight";
       } else {
         bmiCategory = "Obesity";
@@ -95,11 +64,11 @@ function BmiCalculator() {
 
       let bmiCategoryWomen = "";
       if (jenisKelamin === "Perempuan") {
-        if (bmiResult <= 18.4) {
+        if (result <= 18.4) {
           bmiCategoryWomen = "Underweight";
-        } else if (bmiResult >= 18.5 && bmiResult < 23.9) {
+        } else if (result >= 18.5 && result < 23.9) {
           bmiCategoryWomen = "Normal";
-        } else if (bmiResult >= 24 && bmiResult < 28.9) {
+        } else if (result >= 24 && result < 28.9) {
           bmiCategoryWomen = "Overweight";
         } else {
           bmiCategoryWomen = "Obesity";
@@ -118,47 +87,17 @@ function BmiCalculator() {
       setAgeBaby(ageBabyText);
 
       setResult(
-        `Nama: ${name}, Usia anak: ${ageBaby}, Jenis Kelamin: ${genderString}, BMI: ${bmiResult}, Kategori: ${
+        `Nama: ${
+          currentUser.username
+        }, Usia anak: ${ageBaby}, Jenis Kelamin: ${genderString}, BMI: ${result}, Kategori: ${
           jenisKelamin === "Perempuan" ? bmiCategoryWomen : bmiCategory
         }`
       );
 
-      setBmiResult(bmiResult);
+      setResult(result);
       setBmiCategory(bmiCategory);
-
-      const data = {
-        name: name,
-        age: `${years} tahun ${months} bulan`,
-        gender: jenisKelamin,
-        height: tinggiInput,
-        weight: beratInput,
-        result: bmiResult,
-        category: jenisKelamin === "Perempuan" ? bmiCategoryWomen : bmiCategory,
-        createdAt: Date.now(),
-      };
-
-      axios
-        .post(
-          "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/bmi",
-          data
-        )
-        .then((response) => {
-          console.log(response);
-          setBmiHistory([...bmiHistory, response.data]);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Periksa kembali inputan anda",
-      });
-      setResult("");
     }
   };
-
   return (
     <>
       <section className="justify-center p-8 sm:px-24">
@@ -179,20 +118,9 @@ function BmiCalculator() {
                   <input
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     type="text"
-                    value={name}
-                    onChange={(e) => setNamaInput(e.target.value)}
+                    value={currentUser.username}
                     placeholder="Andi Law"
-                    readOnly={!!name}
-                    onClick={() => {
-                      if (!name) {
-                        Swal.fire({
-                          title: "Login Required",
-                          text: "Silahkan login terlebih dahulu untuk memasukkan nama.",
-                          icon: "warning",
-                          confirmButtonText: "OK",
-                        });
-                      }
-                    }}
+                    readOnly={!!currentUser.username}
                   />
                 </div>
                 <div>
@@ -250,8 +178,8 @@ function BmiCalculator() {
                   <input
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     type="number"
-                    value={tinggiInput}
-                    onChange={(e) => setTinggiInput(e.target.value)}
+                    value={height}
+                    onChange={(e) => setHeight(e.target.value)}
                     placeholder="73"
                   />
                   <span id="tinggiError" style={{ color: "red" }}>
@@ -268,8 +196,8 @@ function BmiCalculator() {
                   <input
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     type="number"
-                    value={beratInput}
-                    onChange={(e) => setBeratInput(e.target.value)}
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value)}
                     placeholder="9"
                   />
                   <span id="beratError" style={{ color: "red" }}>
@@ -293,10 +221,10 @@ function BmiCalculator() {
                     Hasil:
                   </p>
                   <ul className="list-disc pl-6">
-                    <li>Nama: {name}</li>
+                    <li>Nama: {currentUser.username}</li>
                     <li>Usia: {ageBaby}</li>
                     <li>Jenis Kelamin: {jenisKelamin}</li>
-                    <li>BMI: {bmiResult}</li>
+                    <li>BMI: {result}</li>
                     <li>Kategori: {bmiCategory}</li>
                   </ul>
                 </div>
@@ -308,7 +236,7 @@ function BmiCalculator() {
               <h1 className="text-lg font-bold text-center leading-tight tracking-tight md:text-xl">
                 Riwayat BMI
               </h1>
-              {bmiHistory.length > 0 ? (
+              {bmiList.length > 0 ? (
                 <div>
                   <table className="w-full border-collapse">
                     <thead className="text-md text-left font-medium text-gray-900">
@@ -324,25 +252,28 @@ function BmiCalculator() {
                       </tr>
                     </thead>
                     <tbody>
-                      {bmiHistory.map((data) => (
-                        <tr key={data.id} className="text-sm text-gray-900">
+                      {bmiList.map((addBMIEntry) => (
+                        <tr
+                          key={addBMIEntry.id}
+                          className="text-sm text-gray-900"
+                        >
                           <td className="border-b border-gray-500 px-4 py-2 ">
-                            {data.name}
+                            {addBMIEntry.name}
                           </td>
                           <td className="border-b border-gray-500 px-4 py-2">
-                            {data.age}
+                            {addBMIEntry.age}
                           </td>
                           <td className="border-b border-gray-500 px-4 py-2">
-                            {data.height}
+                            {addBMIEntry.height}
                           </td>
                           <td className="border-b border-gray-500 px-4 py-2">
-                            {data.weight}
+                            {addBMIEntry.weight}
                           </td>
                           <td className="border-b border-gray-500 px-4 py-2">
-                            {data.result}
+                            {addBMIEntry.result}
                           </td>
                           <td className="border-b border-gray-500 px-4 py-2">
-                            {data.category}
+                            {addBMIEntry.category}
                           </td>
                         </tr>
                       ))}
@@ -358,6 +289,4 @@ function BmiCalculator() {
       </section>
     </>
   );
-}
-
-export default BmiCalculator;
+};
