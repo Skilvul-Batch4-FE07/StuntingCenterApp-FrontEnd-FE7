@@ -25,8 +25,7 @@ const Forum = () => {
         ) : (
           forums?.slice(0, 3).map((forum) => (
             <div key={forum.id} className="w-full mb-4 md:w-1/2 lg:w-1/3">
-              <div className="box-lg bg-white m-4 p-4 w-auto text-center relative border-2 border-slate-400 shadow-md rounded-xl">
-                <FaQuoteRight className="absolute top-4 right-8 text-sm text-slate-600 opacity-10" />
+              <div className="box-lg bg-white m-2 p-2 md:m-4 md:p-4 w-auto text-center relative border-2 border-slate-400 shadow-md rounded-xl">
                 <div className="user flex-col">
                   <img
                     className="mx-auto w-20 h-20 rounded-full"

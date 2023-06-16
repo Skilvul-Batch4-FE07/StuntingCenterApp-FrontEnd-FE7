@@ -71,7 +71,7 @@ export const BmiCalculator = () => {
       }
 
       let bmiCategoryWomen = "";
-      if (jenisKelamin === "Perempuan") {
+      if (gender === "Perempuan") {
         if (result <= 18.4) {
           bmiCategoryWomen = "Underweight";
         } else if (result >= 18.5 && result < 23.9) {
@@ -106,9 +106,9 @@ export const BmiCalculator = () => {
 
   return (
     <>
-      <section className="justify-center p-8 sm:px-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 bg-teal-500 rounded-lg p-4 gap-4">
-          <div className=" flex flex-col max-w-full rounded-lg">
+      <section className="justify-center sm:p-8 sm:px-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 bg-teal-500 rounded-lg p-4 gap-4 md:p-6">
+          <div className=" flex flex-col max-w-md md:max-w-full rounded-lg">
             <div className="space-y-4">
               <form className="space-y-3 md:space-y-4 bg-teal-300 p-4 rounded-lg">
                 <h1 className="text-xl font-bold text-center leading-tight tracking-tight text-gray-900 md:text-xl">
@@ -133,7 +133,7 @@ export const BmiCalculator = () => {
                 </div>
                 <div>
                   <h2>Tanggal Lahir:</h2>
-                  <div className="flex justify-start gap-2">
+                  <div>
                     <DatePicker
                       selected={selectedDate}
                       onChange={handleDateChange}
@@ -145,7 +145,7 @@ export const BmiCalculator = () => {
                       placeholderText="Pilih Tanggal"
                       className="p-2 rounded-md"
                     />
-                    <p>{formBmiState.age}</p>
+                    <span className="text-xs pt-1 font-medium">{formBmiState.age}</span>
                   </div>
                 </div>
 
@@ -262,7 +262,7 @@ export const BmiCalculator = () => {
               )}
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col max-w-md md:max-w-full">
             <div className="space-y-4 bg-gray-300 p-4 rounded-lg">
               <h1 className="text-lg font-bold text-center leading-tight tracking-tight md:text-xl">
                 Riwayat BMI
@@ -272,12 +272,12 @@ export const BmiCalculator = () => {
                   <table className="w-full border-collapse">
                     <thead className="text-md text-left font-medium text-gray-900">
                       <tr>
-                        <th className="border-b border-gray-500 px-4">Nama</th>
-                        <th className="border-b border-gray-500 px-4">Umur</th>
-                        <th className="border-b border-gray-500 px-4">TB</th>
-                        <th className="border-b border-gray-500 px-4">BB</th>
-                        <th className="border-b border-gray-500 px-4">BMI</th>
-                        <th className="border-b border-gray-500 px-4">
+                        <th className="border-b border-gray-500 md:px-4 px-1">Nama</th>
+                        <th className="border-b border-gray-500 md:px-4 px-1">Umur</th>
+                        <th className="border-b border-gray-500 md:px-4 px-1">TB</th>
+                        <th className="border-b border-gray-500 md:px-4 px-1">BB</th>
+                        <th className="border-b border-gray-500 md:px-4 px-1">BMI</th>
+                        <th className="border-b border-gray-500 md:px-4 px-1">
                           Kategori
                         </th>
                       </tr>
@@ -285,22 +285,22 @@ export const BmiCalculator = () => {
                     <tbody>
                       {bmiList.map((bmi) => (
                         <tr key={bmi.id} className="text-sm text-gray-900">
-                          <td className="border-b border-gray-500 px-4 py-2 ">
+                          <td className="border-b border-gray-500 md:px-4 px-1 py-2 ">
                             {bmi.name}
                           </td>
-                          <td className="border-b border-gray-500 px-4 py-2">
+                          <td className="border-b border-gray-500 md:px-4 px-1 py-2">
                             {bmi.age}
                           </td>
-                          <td className="border-b border-gray-500 px-4 py-2">
+                          <td className="border-b border-gray-500 md:px-4 px-1 py-2">
                             {bmi.height}
                           </td>
-                          <td className="border-b border-gray-500 px-4 py-2">
+                          <td className="border-b border-gray-500 md:px-4 px-1 py-2">
                             {bmi.weight}
                           </td>
-                          <td className="border-b border-gray-500 px-4 py-2">
+                          <td className="border-b border-gray-500 md:px-4 px-1 py-2">
                             {bmi.result}
                           </td>
-                          <td className="border-b border-gray-500 px-4 py-2">
+                          <td className="border-b border-gray-500 md:px-4 px-1 py-2">
                             {bmi.category}
                           </td>
                         </tr>

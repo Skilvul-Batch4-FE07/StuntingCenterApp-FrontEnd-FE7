@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, Navigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "../styles/index.css";
 import {
   AiFillHome,
@@ -9,6 +9,7 @@ import {
 } from "react-icons/ai";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -16,7 +17,19 @@ const Navbar = () => {
   const { currentUser, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
-    logout();
+    Swal.fire({
+      title: "Konfirmasi Logout?",
+      text: "Apakah anda yakin akan logout?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+      }
+    });
   };
 
   const toggleDropdown = () => {
@@ -28,7 +41,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 py-2 bg-white shadow-md">
+    <header className="sticky top-0 z-30 py-2 bg-white shadow-md">
       <div className="flex justify-between items-center xl:max-w-7xl xl:mx-auto max-w-full flex-wrap px-4">
         <NavLink to="/home" className="cursor-pointer">
           <img

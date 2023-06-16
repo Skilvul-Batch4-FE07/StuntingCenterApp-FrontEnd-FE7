@@ -9,8 +9,6 @@ export const BMIProvider = ({ children }) => {
   const [bmiList, setBMIList] = useState([]);
   const { currentUser } = useContext(AuthContext);
 
-  console.log(bmiList);
-
   useEffect(() => {
     const fetchBMIList = async () => {
       try {
@@ -33,7 +31,6 @@ export const BMIProvider = ({ children }) => {
 
   const addBMIEntry = async (newBMIEntry) => {
     try {
-
       const response = await axios.post(
         "https://6450b0c5a3221969114f68c0.mockapi.io/api/loginRegister/bmi",
         newBMIEntry

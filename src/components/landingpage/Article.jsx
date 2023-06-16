@@ -7,7 +7,7 @@ const Article = () => {
   const maxScrollWidth = useRef(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const carousel = useRef(null);
-  const {articles} = useContext(ArticleContext)
+  const { articles } = useContext(ArticleContext);
 
   const movePrev = () => {
     if (currentIndex > 0) {
@@ -38,7 +38,6 @@ const Article = () => {
 
     return false;
   };
-
 
   useEffect(() => {
     if (carousel !== null && carousel.current !== null) {
@@ -108,14 +107,14 @@ const Article = () => {
               ref={carousel}
               className="carousel-container relative flex gap-1 overflow-hidden scroll-smooth snap-x snap-mandatory touch-pan-x z-0"
             >
-              {articles.slice(0,10).map((article, index) => {
+              {articles.slice(0, 10).map((article, index) => {
                 return (
                   <div
                     key={index}
                     className="carousel-item text-center relative w-64 h-64 snap-start"
                   >
                     <a
-                      href={article.link}
+                      href={`article/${article.id}`}
                       className="h-full w-full aspect-square block bg-origin-padding bg-left-top bg-cover bg-no-repeat z-0"
                       style={{ backgroundImage: `url(${article.image || ""})` }}
                     >
@@ -126,7 +125,7 @@ const Article = () => {
                       />
                     </a>
                     <a
-                      href={article.link}
+                      href={`article/${article.id}`}
                       className="h-full w-full aspect-square block absolute top-0 left-0 transition-opacity duration-300 opacity-0 hover:opacity-100 bg-teal-500/75 z-10"
                     >
                       <h3 className="text-white py-6 px-3 mx-auto text-xl">
@@ -146,7 +145,7 @@ const Article = () => {
       </div>
       <div className="flex justify-center mt-8">
         <button className="py-3 px-5 text-lg bg-gradient-to-r from-teal-600 to-teal-300 rounded-full font-semibold text-white">
-          <NavLink to="/forum">Baca Selengkapnya</NavLink>
+          <NavLink to="/article">Baca Selengkapnya</NavLink>
         </button>
       </div>
     </>
