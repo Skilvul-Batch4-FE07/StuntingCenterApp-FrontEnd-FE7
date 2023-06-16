@@ -101,23 +101,23 @@ const authSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
       state.loggedIn = true;
-      state.userProfile = action.payload;
+      // state.userProfile = action.payload;
     },
     logout: (state) => {
       state.user = null;
       state.loggedIn = false;
-      state.userProfile = null;
+      // state.userProfile = null;
     },
     login: (state, action) => {
       state.user = action.payload;
       state.loggedIn = true;
-      state.userProfile = action.payload;
+      // state.userProfile = action.payload;
     },
     register: (state, action) => {
       state.user = action.payload;
     },
     updateUserProfile: (state, action) => {
-      state.userProfile = action.payload;
+      // state.userProfile = action.payload;
     },
   },
 });

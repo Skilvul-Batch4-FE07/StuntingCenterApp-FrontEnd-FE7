@@ -1,53 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout, updateUserProfile, loadUser } from '../features/authSlice';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Swal from 'sweetalert2';
-import { updateCurrentUser, clearCurrentUser, getCurrentUser } from '../utils/localStorage';
+import React, { useContext, useState } from "react";
+import Navbar from "../components/Navbar";
+import { AuthContext } from "../contexts/AuthContext";
 
 const ProfilePage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const userProfile = useSelector((state) => state.auth.userProfile);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const { currentUser, logout } = useContext(AuthContext);
+  const [name, setName] = useState(currentUser.username);
+  const [email, setEmail] = useState(currentUser.email);
 
-  useEffect(() => {
-    const currentUser = getCurrentUser();
-    if (!userProfile && currentUser) {
-      dispatch(loadUser());
-    } else if (userProfile) {
-      setName(userProfile.name);
-      setEmail(userProfile.email);
-    }
-  }, [dispatch, userProfile]);
-
-  const handleUpdateProfile = async () => {
-    try {
-      await dispatch(updateUserProfile(userProfile.id, { name, email }));
-      await dispatch(loadUser()); // Memuat kembali data pengguna setelah pembaruan
-      updateCurrentUser(name); // Update data pengguna di localStorage
-      navigate('/profile');
-      Swal.fire({
-        icon: 'success',
-        title: 'Profile Updated',
-        text: 'Your profile has been successfully updated!',
-      });
-    } catch (error) {
-      console.error('Error updating profile:', error);
-    }
-  };
+  const handleUpdateProfile = () => {};
 
   const handleLogout = () => {
-    dispatch(logout());
-    clearCurrentUser(); // Menghapus data pengguna dari localStorage saat logout
-    navigate('/');
+    logout();
   };
-
-  if (!userProfile) {
-    return null;
-  }
 
   return (
     <>

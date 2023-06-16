@@ -5,22 +5,10 @@ import { getCurrentUser } from "../utils/localStorage";
 
 export const ForumContext = createContext();
 
+// eslint-disable-next-line react/prop-types
 export const ForumProvider = ({ children }) => {
   const queryClient = useQueryClient();
   const { data: forums, isLoading } = useQuery("forums", fetchForum);
-  const [commentData, setCommentData] = useState({});
-  const [userData, setUserData] = useState(null);
-  const [newComment, setNewComment] = useState(""); // Tambahkan state untuk komentar baru
-
-  const handleCommentClick = (forumId) => {
-    setCommentData((prevData) => {
-      const updatedData = { ...prevData };
-      updatedData[forumId] = forums
-        .find((forum) => forum.id === forumId)
-        ?.replies?.slice();
-      return updatedData;
-    });
-  };
 
   const postNewComment = useMutation(({ forumId }) =>
     postComment(forumId)
@@ -48,13 +36,11 @@ export const ForumProvider = ({ children }) => {
       const comment = {
         name: getCurrentUser() || "User",
         contentReply: newComment,
-        userProfile: getCurrentUser() || "user-profile-url",
         createdAt: new Date().toISOString(),
       };
 
       await postComment(forumId, comment);
       queryClient.invalidateQueries("forums");
-      setNewComment("");
     } catch (error) {
       console.error("Gagal mengirim komentar:", error);
     }
@@ -65,13 +51,9 @@ export const ForumProvider = ({ children }) => {
       value={{
         forums,
         isLoading,
-        commentData,
-        handleCommentClick,
         handlePostDiscussion,
         handlePostComment,
         postNewComment,
-        newComment,
-        setNewComment, // Tambahkan setNewComment ke dalam value dari context
       }}
     >
       {children}

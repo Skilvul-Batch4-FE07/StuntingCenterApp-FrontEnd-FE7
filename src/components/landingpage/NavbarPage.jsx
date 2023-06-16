@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import "../../styles/index.css";
 import {
   AiFillHome,
@@ -8,47 +7,27 @@ import {
   AiFillCalculator,
   AiFillMessage,
 } from "react-icons/ai";
-import { clearCurrentUser, getCurrentUser } from "../../utils/localStorage";
-import { getUserFromApi } from "../../utils/api";
-import { login, logout } from "../../features/authSlice";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
+import { useEffect } from "react";
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.userProfile);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [userName, setUserName] = useState("");
+  const { currentUser, logout } = useContext(AuthContext);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("loggedInUser");
-    if (user) {
-      setUserName(user.name);
-      localStorage.setItem("loggedInUser", JSON.stringify(user));
-    } else if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUserName(parsedUser.name);
-      dispatch(login(parsedUser));
-    }
-  }, [user, dispatch]);
+  const handleLogout = () => {
+    logout();
+  };
 
-  useEffect(() => {
-    const currentUserId = getCurrentUser();
-    if (currentUserId) {
-      getUserFromApi(currentUserId)
-        .then((user) => {
-          if (user) {
-            dispatch(login(user));
-            setUserName(user.name);
-            localStorage.setItem("loggedInUser", JSON.stringify(user));
-          }
-        })
-        .catch((error) => {
-          console.log("Terjadi kesalahan:", error);
-        });
-    }
-  }, [dispatch]);
+  const toggleDropdown = () => {
+    setShowDropdown((prevShowDropdown) => !prevShowDropdown);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen((prevIsMobileMenuOpen) => !prevIsMobileMenuOpen);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -62,21 +41,6 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    localStorage.removeItem("loggedInUser");
-    clearCurrentUser();
-    navigate("/");
-  };
-
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
 
   return (
     <header
@@ -102,7 +66,7 @@ const Navbar = () => {
                 <path
                   fillRule="evenodd"
                   clipRule="evenodd"
-                  d="M4 6h16v1H4V6zm0 6h16v-1H4v1zm16 4H4v1h16v-1z"
+                  d="M4 6h16v1H4V6zm0 6h16v1H4v1zm16 4H4v1h16v-1z"
                 />
               ) : (
                 <path
@@ -117,7 +81,7 @@ const Navbar = () => {
         <div>
           <nav
             className={`${
-              isMobileMenuOpen ? "block justify-start" : "hidden"
+              isMobileMenuOpen ? "block" : "hidden"
             } lg:flex lg:items-center lg:w-auto w-full`}
           >
             <ul className="text-base text-gray-200 flex flex-col lg:flex-row items-center lg:justify-end lg:gap-8 space-x-3">
@@ -164,61 +128,65 @@ const Navbar = () => {
             </ul>
           </nav>
         </div>
-        <div className={`${
-            isMobileMenuOpen ? "relative" : "hidden"
-          } lg:flex lg:items-center lg:w-auto w-full`}>
-          {user && (
-            <div className="lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6">
+        <div>
+          <div className="lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6">
+            {currentUser && (
               <div
-                className="flex items-center cursor-pointer hover:text-primary"
+                className="flex items-center cursor-pointer hover:text-primary gap-2 bg-slate"
                 onClick={toggleDropdown}
               >
-                <div className="rounded-full bg-gray-300 h-8 w-8 flex items-center justify-center mr-1">
-                  <span className="font-semibold" style={{ color: "#15acb1" }}>
-                    {user.name[0]}
-                  </span>
-                </div>
-                <span style={{ color: "#15acb1" }}>{userName}</span>
+                <img
+                  src={currentUser.profile}
+                  alt={`Profile user ${currentUser.id}`}
+                  className="w-6 rounded-full"
+                />
+                <span
+                  className={`hover:text-teal-400 text-gray-200 font-semibold text-md ${
+                    isScrolled ? "text-gray-500" : ""
+                  }`}
+                >
+                  {currentUser.username}
+                </span>
               </div>
-              {showDropdown && (
-                <ul className="absolute bg-white border border-gray-300 rounded-lg mt-2 py-2 shadow-lg transition-all duration-300">
-                  <li>
-                    <NavLink
-                      to="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Edit Profil
-                    </NavLink>
-                  </li>
-                  <li>
-                    <button
-                      onClick={handleLogout}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                    >
-                      Logout
-                    </button>
-                  </li>
-                </ul>
-              )}
-            </div>
-          )}
-          {!user && (
-            <div className="lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6">
-              <NavLink
-                to="/login"
-                className="bg-primary text-white rounded-full py-1 px-4 font-medium text-md ml-2 flex justify-center items-center transition duration-300 ease-in-out"
-                style={{ backgroundColor: "#15acb1" }}
-                onMouseOver={(e) => {
-                  e.target.style.backgroundColor = "#1f6d79";
-                }}
-                onMouseOut={(e) => {
-                  e.target.style.backgroundColor = "#15acb1";
-                }}
-              >
-                Login
-              </NavLink>
-            </div>
-          )}
+            )}
+            {showDropdown && currentUser && (
+              <ul className="absolute bg-white border border-gray-300 rounded-lg mt-2 py-2 shadow-lg transition-all duration-300">
+                <li>
+                  <NavLink
+                    to="/profile"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Edit Profil
+                  </NavLink>
+                </li>
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            )}
+            {!currentUser && (
+              <div className="lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6">
+                <NavLink
+                  to="/login"
+                  className="bg-primary text-white rounded-full py-1 px-4 font-medium text-md ml-2 flex justify-center items-center transition duration-300 ease-in-out"
+                  style={{ backgroundColor: "#15acb1" }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = "#1f6d79";
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = "#15acb1";
+                  }}
+                >
+                  Login
+                </NavLink>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>

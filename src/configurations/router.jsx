@@ -13,7 +13,6 @@ import ArticlePage from '../pages/ArticlePage'
 import ArticleDetail from '../pages/ArticleDetail'
 import DetailDiskusi from '../pages/DetailDiskusi'
 import BmiPage from '../pages/BmiPage'
-// import CardLineChart from '../components/bmi/Chart'
 
 const RouterComponent = () => {
   return (
