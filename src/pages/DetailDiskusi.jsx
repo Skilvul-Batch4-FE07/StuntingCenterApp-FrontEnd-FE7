@@ -10,30 +10,20 @@ import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Navbar from "../components/Navbar";
-import { useSelector, useDispatch } from "react-redux";
 import Footer from "../components/Footer";
-import { getCurrentUser } from "../utils/localStorage";
-import { loadUser } from "../features/authSlice";
+
 
 function DetailDiskusi() {
-  const dispatch = useDispatch();
-  const { forums, handlePostComment } = useContext(ForumContext);
   const { id } = useParams();
-  const userProfiles = useSelector((state) => state.auth.userProfile);
-  const [name, setName] = useState(userProfiles?.name || "");
+
   const [newComment, setNewComment] = useState("");
 
-  useEffect(() => {
-    const currentUser = getCurrentUser();
-    if (!userProfiles && currentUser) {
-      dispatch(loadUser());
-    } else if (userProfiles) {
-      setName(userProfiles.name);
-    }
-  }, [dispatch, userProfiles]);
+  const { isLoading, forums, handleReplyPost } = useContext(ForumContext);
+  const forum = forums?.find((forum) => forum.id === id);
 
   dayjs.extend(relativeTime);
   dayjs.locale("id");
+
   const goBack = () => {
     window.history.back();
   };
@@ -48,11 +38,11 @@ function DetailDiskusi() {
   const handleSubmitComment = (forumId) => {
     if (newComment.trim() === "") return;
 
-    handlePostComment(forumId, newComment);
+    handleReplyPost(forumId, newComment);
     setNewComment("");
   };
 
-  const forum = forums.find((forum) => forum.id === id);
+
 
   return (
     <>
@@ -63,7 +53,7 @@ function DetailDiskusi() {
             <button>
               <BsChevronLeft className="text-xl" onClick={goBack} />
             </button>
-            <p className="font-semibold text-lg">Postingan {name}</p>
+            <p className="font-semibold text-lg">Postingan { isLoading ? "Loading..." :forum?.username }</p>
             <button>
               <IoShareSocialOutline className="text-xl" onClick={sharePost} />
             </button>
@@ -78,7 +68,7 @@ function DetailDiskusi() {
                     className="rounded-full w-16"
                   />
                   <div>
-                    <p className="font-semibold text-lg">{name}</p>
+                    <p className="font-semibold text-lg">{forum.username}</p>
                     <span className="text-sm text-slate-600">
                       {dayjs(forum.createdAt).fromNow()}
                     </span>
@@ -116,7 +106,7 @@ function DetailDiskusi() {
                               className="rounded-full w-12"
                             />
                             <div>
-                              <p className="font-semibold text-md">{name}</p>
+                              <p className="font-semibold text-md">{reply.username}</p>
                               <span className="text-sm text-slate-600">
                                 {dayjs(reply.createdAt).fromNow()}
                               </span>

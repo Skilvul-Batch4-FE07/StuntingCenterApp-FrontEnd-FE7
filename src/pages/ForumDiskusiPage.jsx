@@ -1,34 +1,19 @@
-import { useContext, useState, useEffect } from "react";
-import { ForumContext } from "../contexts/ForumContext";
+import { useContext, useState } from "react";
 import { Loader } from "../components/Loader";
 import { BiComment, BiLike } from "react-icons/bi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { ForumContext } from "../contexts/ForumContext";
+import { AuthContext } from "../contexts/AuthContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { getCurrentUser } from "../utils/localStorage";
-import { useDispatch } from "react-redux";
-import { loadUser } from "../features/authSlice";
-import { AuthContext } from "../contexts/AuthContext";
+
 
 function ForumDiskusiPage() {
-  const dispatch = useDispatch();
+  const {currentUser} = useContext(AuthContext);
   const { forums, isLoading, handlePostDiscussion } = useContext(ForumContext);
-  const {currentUser} = useContext(AuthContext)
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const currentUser = getCurrentUser();
-    if (!forums.userProfile && currentUser) {
-      dispatch(loadUser());
-    } else if (forums.userProfile) {
-      setName(forums.userProfile.name);
-    } else {
-      navigate("/login");
-    }
-  }, [dispatch, navigate, forums.userProfile]);
 
   const [newDiscussion, setNewDiscussion] = useState({
     title: "",
@@ -49,16 +34,19 @@ function ForumDiskusiPage() {
     const discussion = {
       title: newDiscussion.title,
       postContent: newDiscussion.postContent,
+      username: currentUser.username,
       createdAt: Date.now(),
-      name: currentUser.username,
     };
     handlePostDiscussion(discussion);
     setNewDiscussion({ title: "", postContent: "" });
   };
 
+  
+  
   if (isLoading) {
     return <Loader />;
   }
+
   return (
     <>
       <Navbar />
@@ -68,10 +56,6 @@ function ForumDiskusiPage() {
             <form onSubmit={handleSubmitDiscussion} className="space-y-4">
               <input
                 type="text"
-                value={newDiscussion.title}
-                onChange={(e) =>
-                  setNewDiscussion({ ...newDiscussion, title: e.target.value })
-                }
                 placeholder="Judul Diskusi"
                 className="border-2 border-gray-300 rounded-md p-2 w-full"
               />
@@ -106,8 +90,7 @@ function ForumDiskusiPage() {
                       className="rounded-full w-16"
                     />
                     <div>
-                      {" "}
-                      <p className="font-semibold text-lg">{forum.name}</p>
+                      <p className="font-semibold text-lg">{forum.username}</p>
                       <span className="text-sm text-slate-600">
                         {dayjs(forum.createdAt).fromNow()}
                       </span>
@@ -126,6 +109,7 @@ function ForumDiskusiPage() {
                       className="bg-gray-300 py-1 px-4 rounded-full flex items-center gap-1"
                     >
                       <BiComment />{" "}
+                      
                       {forum.replies.length > 0 ? forum.replies.length : ""}
                     </Link>
                   </div>

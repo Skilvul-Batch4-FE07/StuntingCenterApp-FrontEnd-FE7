@@ -120,3 +120,13 @@ export const postDiscussion = (discussion) =>
     },
     body: JSON.stringify(discussion),
   }).then((response) => response.json());
+
+
+export const deleteDiscussion = (discussion) =>
+  fetch("https://647d55a0af98471085499e81.mockapi.io/forums", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(discussion),
+  }).then((response) => response.json());

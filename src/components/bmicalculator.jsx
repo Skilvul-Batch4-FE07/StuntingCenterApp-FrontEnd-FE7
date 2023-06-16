@@ -6,23 +6,38 @@ import "react-datepicker/dist/react-datepicker.css";
 
 export const BmiCalculator = () => {
   const { currentUser } = useContext(AuthContext);
-  const [ageBaby, setAgeBaby] = useState("");
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [jenisKelamin, setJenisKelamin] = useState();
-  const [height, setHeight] = useState("");
-  const [weight, setWeight] = useState("");
   const { bmiList, addBMIEntry } = useContext(BMIContext);
+
+  const [formBmiState, setFormBmiState] = useState({
+    name: "",
+    age: "",
+    height: "",
+    weight: "",
+    bmiCategory: "",
+    gender: "",
+  });
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [result, setResult] = useState();
   const [tinggiError, setTinggiError] = useState("");
   const [beratError, setBeratError] = useState("");
-  const [result, setResult] = useState("");
-  const [bmiCategory, setBmiCategory] = useState("");
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
+    const currentDate = new Date();
+    const selectedDateOfBirth = new Date(date);
+    const ageDiff = Math.floor(
+      (currentDate - selectedDateOfBirth) / (1000 * 60 * 60 * 24 * 30.44)
+    );
+    const years = Math.floor(ageDiff / 12);
+    const months = ageDiff % 12;
+    const ageBabyText =
+      years !== 0 ? `${years} tahun ${months} bulan` : `${months} bulan`;
+    setFormBmiState({ ...formBmiState, age: ageBabyText });
   };
 
-  const calculateBMI = () => {
+  const calculateBMI = (event) => {
     event.preventDefault();
+    const { name, age, height, weight, bmiCategory, gender } = formBmiState;
     const tinggiNum = parseInt(height);
     const beratNum = parseInt(weight);
 
@@ -55,13 +70,6 @@ export const BmiCalculator = () => {
         bmiCategory = "Obesity";
       }
 
-      let genderString = "";
-      if (jenisKelamin === "Laki-laki") {
-        genderString = "Laki-laki";
-      } else {
-        genderString = "Perempuan";
-      }
-
       let bmiCategoryWomen = "";
       if (jenisKelamin === "Perempuan") {
         if (result <= 18.4) {
@@ -75,33 +83,31 @@ export const BmiCalculator = () => {
         }
       }
 
-      const currentDate = new Date();
-      const selectedDateOfBirth = new Date(selectedDate);
-      const ageDiff = Math.floor(
-        (currentDate - selectedDateOfBirth) / (1000 * 60 * 60 * 24 * 30.44)
-      );
-      const years = Math.floor(ageDiff / 12);
-      const months = ageDiff % 12;
-      const ageBabyText =
-        years !== 0 ? `${years} tahun ${months} bulan` : `${months} bulan`;
-      setAgeBaby(ageBabyText);
+      const finalCategory =
+        gender === "Perempuan" ? bmiCategoryWomen : bmiCategory;
 
-      setResult(
-        `Nama: ${
-          currentUser.username
-        }, Usia anak: ${ageBaby}, Jenis Kelamin: ${genderString}, BMI: ${result}, Kategori: ${
-          jenisKelamin === "Perempuan" ? bmiCategoryWomen : bmiCategory
-        }`
-      );
-
+      setFormBmiState({ ...formBmiState, bmiCategory: finalCategory });
       setResult(result);
-      setBmiCategory(bmiCategory);
+
+      const newBMIEntry = {
+        userId: currentUser.id,
+        name,
+        age,
+        gender,
+        height,
+        result,
+        category: finalCategory,
+        createdAt: Date.now(),
+      };
+
+      addBMIEntry(newBMIEntry);
     }
   };
+
   return (
     <>
       <section className="justify-center p-8 sm:px-24">
-        <div className="grid grid-cols-2 bg-teal-500 rounded-lg p-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 bg-teal-500 rounded-lg p-4 gap-4">
           <div className=" flex flex-col max-w-full rounded-lg">
             <div className="space-y-4">
               <form className="space-y-3 md:space-y-4 bg-teal-300 p-4 rounded-lg">
@@ -118,14 +124,16 @@ export const BmiCalculator = () => {
                   <input
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     type="text"
-                    value={currentUser.username}
                     placeholder="Andi Law"
-                    readOnly={!!currentUser.username}
+                    value={formBmiState.name}
+                    onChange={(e) =>
+                      setFormBmiState({ ...formBmiState, name: e.target.value })
+                    }
                   />
                 </div>
                 <div>
                   <h2>Tanggal Lahir:</h2>
-                  <div className="flex">
+                  <div className="flex justify-start gap-2">
                     <DatePicker
                       selected={selectedDate}
                       onChange={handleDateChange}
@@ -137,7 +145,7 @@ export const BmiCalculator = () => {
                       placeholderText="Pilih Tanggal"
                       className="p-2 rounded-md"
                     />
-                    <p>umur bayi</p>
+                    <p>{formBmiState.age}</p>
                   </div>
                 </div>
 
@@ -154,8 +162,13 @@ export const BmiCalculator = () => {
                         type="radio"
                         name="jenisKelamin"
                         value="Laki-laki"
-                        checked={jenisKelamin === "Laki-laki"}
-                        onChange={() => setJenisKelamin("Laki-laki")}
+                        checked={formBmiState.gender === "Laki-laki"}
+                        onChange={() =>
+                          setFormBmiState({
+                            ...formBmiState,
+                            gender: "Laki-laki",
+                          })
+                        }
                       />
                       <span className="ml-2">Laki-laki</span>
                     </label>
@@ -164,8 +177,13 @@ export const BmiCalculator = () => {
                         type="radio"
                         name="jenisKelamin"
                         value="Perempuan"
-                        checked={jenisKelamin === "Perempuan"}
-                        onChange={() => setJenisKelamin("Perempuan")}
+                        checked={formBmiState.gender === "Perempuan"}
+                        onChange={() =>
+                          setFormBmiState({
+                            ...formBmiState,
+                            gender: "Perempuan",
+                          })
+                        }
                       />
                       <span className="ml-2">Perempuan</span>
                     </label>
@@ -181,8 +199,13 @@ export const BmiCalculator = () => {
                   <input
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     type="number"
-                    value={height}
-                    onChange={(e) => setHeight(e.target.value)}
+                    value={formBmiState.height}
+                    onChange={(e) =>
+                      setFormBmiState({
+                        ...formBmiState,
+                        height: e.target.value,
+                      })
+                    }
                     placeholder="73"
                   />
                   <span id="tinggiError" style={{ color: "red" }}>
@@ -199,8 +222,13 @@ export const BmiCalculator = () => {
                   <input
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     type="number"
-                    value={weight}
-                    onChange={(e) => setWeight(e.target.value)}
+                    value={formBmiState.weight}
+                    onChange={(e) =>
+                      setFormBmiState({
+                        ...formBmiState,
+                        weight: e.target.value,
+                      })
+                    }
                     placeholder="9"
                   />
                   <span id="beratError" style={{ color: "red" }}>
@@ -224,11 +252,11 @@ export const BmiCalculator = () => {
                     Hasil:
                   </p>
                   <ul className="list-disc pl-6">
-                    <li>Nama: {currentUser.username}</li>
-                    <li>Usia: {ageBaby}</li>
-                    <li>Jenis Kelamin: {jenisKelamin}</li>
+                    <li>Nama: {formBmiState.name}</li>
+                    <li>Usia: {formBmiState.age}</li>
+                    <li>Jenis Kelamin: {formBmiState.gender}</li>
                     <li>BMI: {result}</li>
-                    <li>Kategori: {bmiCategory}</li>
+                    <li>Kategori: {formBmiState.bmiCategory}</li>
                   </ul>
                 </div>
               )}
@@ -255,28 +283,25 @@ export const BmiCalculator = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {bmiList.map((addBMIEntry) => (
-                        <tr
-                          key={addBMIEntry.id}
-                          className="text-sm text-gray-900"
-                        >
+                      {bmiList.map((bmi) => (
+                        <tr key={bmi.id} className="text-sm text-gray-900">
                           <td className="border-b border-gray-500 px-4 py-2 ">
-                            {addBMIEntry.name}
+                            {bmi.name}
                           </td>
                           <td className="border-b border-gray-500 px-4 py-2">
-                            {addBMIEntry.age}
+                            {bmi.age}
                           </td>
                           <td className="border-b border-gray-500 px-4 py-2">
-                            {addBMIEntry.height}
+                            {bmi.height}
                           </td>
                           <td className="border-b border-gray-500 px-4 py-2">
-                            {addBMIEntry.weight}
+                            {bmi.weight}
                           </td>
                           <td className="border-b border-gray-500 px-4 py-2">
-                            {addBMIEntry.result}
+                            {bmi.result}
                           </td>
                           <td className="border-b border-gray-500 px-4 py-2">
-                            {addBMIEntry.category}
+                            {bmi.category}
                           </td>
                         </tr>
                       ))}
