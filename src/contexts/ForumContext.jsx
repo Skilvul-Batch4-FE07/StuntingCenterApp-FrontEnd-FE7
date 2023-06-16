@@ -1,13 +1,14 @@
-import { createContext, useState } from "react";
+import { createContext, useContext } from "react";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { fetchForum, postDiscussion, postComment } from "../utils/api";
-import { getCurrentUser } from "../utils/localStorage";
+import { AuthContext } from "./AuthContext";
 
 export const ForumContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 export const ForumProvider = ({ children }) => {
   const queryClient = useQueryClient();
+  const { currentUser} = useContext(AuthContext);
   const { data: forums, isLoading } = useQuery("forums", fetchForum);
 
   const postNewComment = useMutation(({ forumId }) =>
@@ -29,12 +30,12 @@ export const ForumProvider = ({ children }) => {
     });
   };
 
-  const handlePostComment = async (forumId, newComment) => {
+  const handleReplyPost = async (forumId, newComment) => {
     if (newComment.trim() === "") return;
 
     try {
       const comment = {
-        name: getCurrentUser() || "User",
+        username: currentUser.username,
         contentReply: newComment,
         createdAt: new Date().toISOString(),
       };
@@ -52,7 +53,7 @@ export const ForumProvider = ({ children }) => {
         forums,
         isLoading,
         handlePostDiscussion,
-        handlePostComment,
+        handleReplyPost,
         postNewComment,
       }}
     >

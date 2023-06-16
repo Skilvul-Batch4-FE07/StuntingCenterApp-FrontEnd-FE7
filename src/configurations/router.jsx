@@ -1,3 +1,4 @@
+import { useContext } from 'react'
 import {
   BrowserRouter as Router,
   Route,
@@ -14,7 +15,11 @@ import ArticleDetail from '../pages/ArticleDetail'
 import DetailDiskusi from '../pages/DetailDiskusi'
 import BmiPage from '../pages/BmiPage'
 
+import { AuthContext } from '../contexts/AuthContext'
+
 const RouterComponent = () => {
+
+  const { isLoggedIn } = useContext(AuthContext);
   return (
     <Router> 
       <Routes>
@@ -26,7 +31,7 @@ const RouterComponent = () => {
         <Route path='/profile' element={<ProfilePage />} />
         <Route path='/' element={<Navigate to='/home' />} />
         <Route path='/forum' element= {<ForumPage/>} />
-        <Route path='/bmi' element= {<BmiPage/>} />
+        <Route path='/bmi' element= {isLoggedIn ? <BmiPage/> : <Navigate to="/login" />} />
         <Route path="/forum/:id" element={<DetailDiskusi />} />
       </Routes>
     </Router>
