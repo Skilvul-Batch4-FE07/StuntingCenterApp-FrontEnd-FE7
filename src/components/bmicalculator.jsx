@@ -125,17 +125,20 @@ export const BmiCalculator = () => {
                 </div>
                 <div>
                   <h2>Tanggal Lahir:</h2>
-                  <DatePicker
-                    selected={selectedDate}
-                    onChange={handleDateChange}
-                    dateFormat="dd/MM/yyyy"
-                    peekNextMonth
-                    showMonthDropdown
-                    showYearDropdown
-                    dropdownMode="select"
-                    placeholderText="Pilih Tanggal"
-                    className="p-2 rounded-md"
-                  />
+                  <div className="flex">
+                    <DatePicker
+                      selected={selectedDate}
+                      onChange={handleDateChange}
+                      dateFormat="dd/MM/yyyy"
+                      peekNextMonth
+                      showMonthDropdown
+                      showYearDropdown
+                      dropdownMode="select"
+                      placeholderText="Pilih Tanggal"
+                      className="p-2 rounded-md"
+                    />
+                    <p>umur bayi</p>
+                  </div>
                 </div>
 
                 <div>

@@ -129,7 +129,7 @@ const Navbar = () => {
               </ul>
             )}
             {!currentUser && (
-              <div className="lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6">
+              <div className="flex lg:px-4 py-2 hover:text-blue-500 font-semibold text-lg lg:pl-6">
                 <NavLink
                   to="/login"
                   className="bg-primary text-white rounded-full py-1 px-4 font-medium text-md ml-2 flex justify-center items-center transition duration-300 ease-in-out"

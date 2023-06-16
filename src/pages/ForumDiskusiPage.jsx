@@ -11,11 +11,12 @@ import Footer from "../components/Footer";
 import { getCurrentUser } from "../utils/localStorage";
 import { useDispatch } from "react-redux";
 import { loadUser } from "../features/authSlice";
+import { AuthContext } from "../contexts/AuthContext";
 
 function ForumDiskusiPage() {
   const dispatch = useDispatch();
   const { forums, isLoading, handlePostDiscussion } = useContext(ForumContext);
-  const [name, setName] = useState("");
+  const {currentUser} = useContext(AuthContext)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,7 +50,7 @@ function ForumDiskusiPage() {
       title: newDiscussion.title,
       postContent: newDiscussion.postContent,
       createdAt: Date.now(),
-      name: currentUser,
+      name: currentUser.username,
     };
     handlePostDiscussion(discussion);
     setNewDiscussion({ title: "", postContent: "" });
