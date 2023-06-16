@@ -49,7 +49,11 @@ const LoginForm = () => {
   return (
     <div className="flex flex-col-reverse md:flex-row items-center justify-around min-h-screen font-sans">
       <div className="w-full max-w-md flex overflow-hidden">
-        <div className="w-full p-8 mx-auto md:mx-0">
+        
+        <div className="w-full p-8">
+          <h1 className=" text-center pb-16 text-2xl font-bold text-black">
+            Silahkan login untuk melanjutkan
+          </h1>
           <div className="text-center mb-8"></div>
           <div className="flex pb-8">
             <NavLink
@@ -160,12 +164,7 @@ const LoginForm = () => {
       </div>
       <div className="w-full max-w-md flex bg-none overflow-hidden">
         <div className="w-full mx-auto md:mr-0">
-          <h1
-            className="p-2 text-3xl font-bold mb-8"
-            style={{ color: "rgba(17, 118, 143, 255)" }}
-          >
-            Bergabunglah dengan Stunting Center dan temukan solusi bersama
-          </h1>
+
           <img src={imgSide} alt="Side Image" className="w-full" />
         </div>
       </div>

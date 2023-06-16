@@ -1,23 +1,19 @@
 import { useContext, useState, useEffect } from "react";
-
 import { Loader } from "../components/Loader";
 import { BiComment, BiLike } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
-
 import { ForumContext } from "../contexts/ForumContext";
 import { AuthContext } from "../contexts/AuthContext";
-
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 
-
 function ForumDiskusiPage() {
   const {currentUser} = useContext(AuthContext);
-  const { forums, isLoading, handlePostDiscussion } = useContext(ForumContext);
+  const { forums, isLoading, handlePostDiscussion , handleDeleteDiscussion} = useContext(ForumContext);
 
   const [newDiscussion, setNewDiscussion] = useState({
     title: "",
@@ -45,6 +41,8 @@ function ForumDiskusiPage() {
     setNewDiscussion({ title: "", postContent: "" });
   };
 
+  
+  
   if (isLoading) {
     return <Loader />;
   }
@@ -115,6 +113,7 @@ function ForumDiskusiPage() {
                       className="bg-gray-300 py-1 px-4 rounded-full flex items-center gap-1"
                     >
                       <BiComment />{" "}
+                      
                       {forum.replies.length > 0 ? forum.replies.length : ""}
                     </Link>
                   </div>

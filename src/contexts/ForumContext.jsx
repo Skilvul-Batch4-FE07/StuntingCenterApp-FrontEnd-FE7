@@ -19,6 +19,7 @@ export const ForumProvider = ({ children }) => {
     postDiscussion(discussion)
   );
 
+
   const handlePostDiscussion = (discussion) => {
     postNewDiscussion.mutate(discussion, {
       onSuccess: () => {
@@ -30,6 +31,7 @@ export const ForumProvider = ({ children }) => {
     });
   };
 
+  
   const handleReplyPost = async (forumId, newComment) => {
     if (newComment.trim() === "") return;
 

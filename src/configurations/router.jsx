@@ -30,9 +30,9 @@ const RouterComponent = () => {
         <Route path="/article/:id" element={<ArticleDetail />} />        
         <Route path='/profile' element={<ProfilePage />} />
         <Route path='/' element={<Navigate to='/home' />} />
-        <Route path='/forum' element= {<ForumPage/>} />
+        <Route path='/forum' element={isLoggedIn ? <ForumPage /> : <Navigate to="/login" />} />
         <Route path='/bmi' element= {isLoggedIn ? <BmiPage/> : <Navigate to="/login" />} />
-        <Route path="/forum/:id" element={<DetailDiskusi />} />
+        <Route path="/forum/:id" element={<DetailDiskusi />}/>
       </Routes>
     </Router>
   );

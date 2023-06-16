@@ -106,7 +106,7 @@ export const BmiCalculator = () => {
   return (
     <>
       <section className="justify-center p-8 sm:px-24">
-        <div className="grid grid-cols-2 bg-teal-500 rounded-lg p-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 bg-teal-500 rounded-lg p-4 gap-4">
           <div className=" flex flex-col max-w-full rounded-lg">
             <div className="space-y-4">
               <form className="space-y-3 md:space-y-4 bg-teal-300 p-4 rounded-lg">
@@ -130,7 +130,8 @@ export const BmiCalculator = () => {
                 </div>
                 <div>
                   <h2>Tanggal Lahir:</h2>
-                  <DatePicker
+                  <div className="flex justify-start gap-2">
+                    <DatePicker
                     selected={selectedDate}
                     onChange={handleDateChange}
                     dateFormat="dd/MM/yyyy"
@@ -142,6 +143,8 @@ export const BmiCalculator = () => {
                     className="p-2 rounded-md"
                   />
                   <p>{formBmiState.age}</p>
+                  </div>
+                  
                 </div>
 
                 <div>
