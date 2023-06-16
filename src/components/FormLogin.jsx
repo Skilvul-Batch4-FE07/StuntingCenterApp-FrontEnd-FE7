@@ -171,7 +171,7 @@ const LoginForm = () => {
               </NavLink>
               {" "}atau <br></br>
               <NavLink
-                to="/home"
+                to="/"
                 className="text-1xl font-bold text-gray-800"
                 style={{ color: '#377389' }}
               >

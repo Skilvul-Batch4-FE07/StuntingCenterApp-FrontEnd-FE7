@@ -6,15 +6,11 @@ import { Link, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { getCurrentUser } from "../utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUser } from "../features/authSlice";
-
-const MySwal = withReactContent(Swal);
 
 function ForumDiskusiPage() {
   const dispatch = useDispatch();
@@ -39,6 +35,7 @@ function ForumDiskusiPage() {
     title: "",
     postContent: "",
     createdAt: Date.now(),
+    
   });
 
   dayjs.extend(relativeTime);
@@ -56,7 +53,7 @@ function ForumDiskusiPage() {
       title: newDiscussion.title,
       postContent: newDiscussion.postContent,
       createdAt: Date.now(),
-      name: userProfile.name,
+      name: name,
     };
     handlePostDiscussion(discussion);
     setNewDiscussion({ title: "", postContent: "" });
@@ -113,7 +110,7 @@ function ForumDiskusiPage() {
                     />
                     <div>
                       {" "}
-                      <p className="font-semibold text-lg">{name}</p>
+                      <p className="font-semibold text-lg">{forum.name}</p>
                       <span className="text-sm text-slate-600">
                         {dayjs(forum.createdAt).fromNow()}
                       </span>
@@ -169,4 +166,4 @@ function ForumDiskusiPage() {
   );
 }
 
-export default ForumDiskusiPage;
+export default ForumDiskusiPage

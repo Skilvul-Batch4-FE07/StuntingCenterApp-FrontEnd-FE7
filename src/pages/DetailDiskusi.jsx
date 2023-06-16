@@ -33,7 +33,7 @@ function DetailDiskusi() {
     if (!userProfile && currentUser) {
       dispatch(loadUser());
     } else if (userProfile) {
-      setName(userProfile.name);
+      setName(userProfile.namaCurrent);
     }
   }, [dispatch, userProfile]);
   
@@ -56,7 +56,7 @@ function DetailDiskusi() {
     const updatedForum = { ...forum };
     const newReply = {
       id: Date.now().toString(),
-      name: name || "",
+      name: userProfile.namaCurrent || "",
       contentReply: newComment,
       userProfile: userProfile?.profileUrl || "",
       createdAt: new Date().toISOString(),
@@ -89,7 +89,7 @@ function DetailDiskusi() {
             <button>
               <BsChevronLeft className="text-xl" onClick={goBack} />
             </button>
-            <p className="font-semibold text-lg">Postingan {name}</p>
+            <p className="font-semibold text-lg">Postingan {forum.name}</p>
             <button>
               <IoShareSocialOutline className="text-xl" onClick={sharePost} />
             </button>
@@ -104,7 +104,7 @@ function DetailDiskusi() {
                     className="rounded-full w-16"
                   />
                   <div>
-                    <p className="font-semibold text-lg">{name}</p>
+                    <p className="font-semibold text-lg">{forum.name}</p>
                     <span className="text-sm text-slate-600">
                       {dayjs(forum.createdAt).fromNow()}
                     </span>
@@ -143,7 +143,7 @@ function DetailDiskusi() {
                             />
                             <div>
                               <p className="font-semibold text-md">
-                                {name}
+                                {userProfile.name}
                               </p>
                               <span className="text-sm text-slate-600">
                                 {dayjs(reply.createdAt).fromNow()}
